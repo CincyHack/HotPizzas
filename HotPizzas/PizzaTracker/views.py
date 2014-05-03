@@ -25,7 +25,7 @@ def test(request):
 	return render(request, 'driver-pizzas.html', ctx)
 
 def home(request):
-	return HttpResponse
+	return HttpResponse('Hello World')
 	
 
 @login_required
