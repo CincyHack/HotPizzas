@@ -1,0 +1,31 @@
+<div>
+  
+  <p><b>to deliver</b></p>
+  {% for p in pizzas_to_deliver %}
+    <p>
+      {{ p.topping }}
+      {{ p.customer_full_name }}
+      {{ p.request_time }}
+      {{ p.customer_latitude }}
+      {{ p.customer_longitude }}
+      {{ p.customer_phone }}
+    </p>
+  {% endfor %}
+
+  <p><b>available</b></p>
+  {% for p in pizzas_available %}
+    <p>
+      {{ p.topping }}
+      {{ p.creation_time }}
+    </p>
+  {% endfor %}
+
+  <p><b>delivered</b></p>
+  {% for p in pizzas_delivered %}
+    <p>
+      {{ p.customer_name }}
+      {{ p.topping }}
+    </p>
+  {% endfor %}
+
+</div>
