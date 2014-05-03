@@ -3,4 +3,4 @@ from PizzaTracker.models import *
 
 admin.site.register(Pizza)
 admin.site.register(Driver)
-# Register your models here.
+admin.site.register(Customer)
