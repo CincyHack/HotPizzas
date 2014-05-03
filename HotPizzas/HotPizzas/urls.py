@@ -9,6 +9,8 @@ urlpatterns = patterns('',
     # url(r'^blog/', include('blog.urls')),
     url(r'^$', 'PizzaTracker.views.home', name='home'),
     url(r'^pizzas/available/$', 'PizzaTracker.views.available_pizzas', name='available_pizzas'),
+    url(r'^pizzas/delivered/$', 'PizzaTracker.views.delivered_pizzas', name='delivered_pizzas'),
+    url(r'^pizzas/to-deliver/$', 'PizzaTracker.views.pizzas_to_deliver', name='pizzas_to_deliver'),
     url(r'^admin/', include(admin.site.urls)),
     #/login/ to sign in to the application
     url(r'^login/$', 'django.contrib.auth.views.login', {'template_name': 'login.html'}),
