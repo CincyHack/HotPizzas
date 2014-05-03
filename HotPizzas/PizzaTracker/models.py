@@ -42,5 +42,5 @@ class Pizza(models.Model):
 	price = models.DecimalField(max_digits=4, decimal_places=2)
 	topping = models.CharField(max_length=1, choices=TOPPING_CHOICES, default=CHEESE)
 	customer = models.ForeignKey(Customer, null=True, blank=True)
-	driver = models.ForeignKey(Driver, null=True, blank=True)
+	driver = models.ForeignKey(Driver)
 	
