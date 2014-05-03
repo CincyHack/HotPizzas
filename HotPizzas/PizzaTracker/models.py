@@ -43,4 +43,4 @@ class Pizza(models.Model):
 	topping = models.CharField(max_length=1, choices=TOPPING_CHOICES, default=CHEESE)
 	customer = models.ForeignKey(Customer, null=True, blank=True)
 	driver = models.ForeignKey(Driver)
-	
+	delivered = models.BooleanField(default=False)
