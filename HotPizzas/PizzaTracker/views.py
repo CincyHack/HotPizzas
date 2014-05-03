@@ -22,7 +22,7 @@ def test(request):
 	
 	ctx = {'pizzas_available': pizzas_available, 'pizzas_delivered': pizzas_delivered, 'pizzas_to_deliver': pizzas_to_deliver }
 	
-	render(request, 'driver-pizzas.html', ctx)
+	return render(request, 'driver-pizzas.html', ctx)
 
 def home(request):
 	return HttpResponse
