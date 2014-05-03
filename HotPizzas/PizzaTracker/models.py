@@ -5,6 +5,15 @@ from django.contrib.auth.models import User
 class Customer(models.Model):
 	user = models.OneToOneField(User)
 	phone_number = models.CharField(max_length=15)
+	latitude = models.DecimalField(
+		max_digits=10,
+		decimal_places=5
+	)
+	longitude = models.DecimalField(
+		max_digits=10,
+		decimal_places=5
+	)
+	last_location_time = models.DateTimeField()
 	
 
 class Driver(models.Model):
@@ -32,6 +41,6 @@ class Pizza(models.Model):
 	cook_time = models.DateTimeField()
 	price = models.DecimalField(max_digits=4, decimal_places=2)
 	topping = models.CharField(max_length=1, choices=TOPPING_CHOICES, default=CHEESE)
-	buyer = models.ForeignKey(User, related_name="buyer")
-	driver = models.ForeignKey(Driver)
+	customer = models.ForeignKey(Customer, null=True, blank=True)
+	driver = models.ForeignKey(Driver, null=True, blank=True)
 	
