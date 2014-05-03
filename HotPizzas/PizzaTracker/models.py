@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 
 
 # Create your models here.
-class Driver(models.Mode):
+class Driver(models.Model):
 	user = models.OneToOneField(User)
 	latitude = models.DecimalField(
 		max_digits=10,
