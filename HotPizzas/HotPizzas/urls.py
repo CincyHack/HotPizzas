@@ -11,6 +11,7 @@ urlpatterns = patterns('',
     url(r'^pizzas/available/$', 'PizzaTracker.views.available_pizzas', name='available_pizzas'),
     url(r'^pizzas/delivered/$', 'PizzaTracker.views.delivered_pizzas', name='delivered_pizzas'),
     url(r'^pizzas/to-deliver/$', 'PizzaTracker.views.to_deliver_pizzas', name='to_deliver_pizzas'),
+    url(r'^demo_page/$', 'PizzaTracker.views.test', name='demo_page'),
     url(r'^admin/', include(admin.site.urls)),
     #/login/ to sign in to the application
     url(r'^login/$', 'django.contrib.auth.views.login', {'template_name': 'login.html'}),
