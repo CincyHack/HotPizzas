@@ -1,6 +1,7 @@
 from django.forms import ModelForm
 from django.contrib.auth.models import User
 from PizzaTracker.models import *
+from datetime import datetime
 
 class UserForm(forms.ModelForm):
 	username = forms.CharField(help_text="Please enter a username.")
@@ -16,19 +17,25 @@ class CustomerForm(forms.ModelForm):
 		regex=r'^\+?1?\d{9,15}$', 
 		error_message=("Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
 	)
-	latitude = forms.DecimalForm()
-	longitude = forms.DecimalForm()
+	latitude = forms.DecimalField(widget=forms.HiddenInput(), max_digits=20, decimal_places=17)
+	longitude = forms.DecimalField(widget=forms.HiddenInput(), max_digits=20, decimal_places=17)
 	
 	class Meta:
 		model = Customer
 		fields = ('phone_number', 'latitude', 'logitude')
 		
 class PizzaForm(forms.ModelForm):
+	cook_time = forms.DateTimeField(initial=datetime.now())
+	price = forms.DecimalField(max_digits=4, decimal_places=2)
+	topping = forms.ChoiceField(Pizza.TOPPING_CHOICES)
 	class Meta:
 		model = Pizza
 		fields = ('cook_time', 'price', 'topping')
 		
 class DriverForm(forms.ModelForm):
+	latitude = forms.DecimalField(widget=forms.HiddenInput(), max_digits=20, decimal_places=17)
+	longitude = forms.DecimalField(widget=forms.HiddenInput(), max_digits=20, decimal_places=17)
+	
 	class Meta:
 		model = Driver
 		fields = ('latitude', 'longitude')
