@@ -6,12 +6,12 @@ class Customer(models.Model):
 	user = models.OneToOneField(User)
 	phone_number = models.CharField(max_length=15)
 	latitude = models.DecimalField(
-		max_digits=10,
-		decimal_places=5
+		max_digits=20,
+		decimal_places=17
 	)
 	longitude = models.DecimalField(
-		max_digits=10,
-		decimal_places=5
+		max_digits=20,
+		decimal_places=17
 	)
 	last_location_time = models.DateTimeField()
 	
@@ -19,12 +19,12 @@ class Customer(models.Model):
 class Driver(models.Model):
 	user = models.OneToOneField(User)
 	latitude = models.DecimalField(
-		max_digits=10,
-		decimal_places=5
+		max_digits=20,
+		decimal_places=17
 	)
 	longitude = models.DecimalField(
-		max_digits=10,
-		decimal_places=5
+		max_digits=20,
+		decimal_places=17
 	)
 	last_location_time = models.DateTimeField()
 	
