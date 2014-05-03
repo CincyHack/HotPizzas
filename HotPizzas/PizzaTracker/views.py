@@ -13,6 +13,7 @@ def available_pizzas(request):
 		formatted_pizza = dict()
 		formatted_pizza["cook_time"] = str(pizza.cook_time)
 		formatted_pizza["price"] = str(pizza.price)
+		formatted_pizza["topping"] = pizza.topping
 		if pizza.customer:
 			formatted_pizza["customer_username"] = pizza.customer.username
 			formatted_pizza["customer_phone"] = pizza.customer.phone
