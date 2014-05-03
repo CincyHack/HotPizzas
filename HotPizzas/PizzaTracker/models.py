@@ -3,6 +3,19 @@ from django.contrib.auth.models import User
 
 
 # Create your models here.
+class Driver(models.Mode):
+	user = models.OneToOneField(User)
+	latitude = models.DecimalField(
+		max_digits=10,
+		decimal_places=5
+	)
+	longitude = models.DecimalField(
+		max_digits=10,
+		decimal_places=5
+	)
+	last_location_time = models.DateTimeField()
+	
+
 class Pizza(models.Model):
 	CHEESE = "C"
 	PEPPERONI = "P"
@@ -17,16 +30,4 @@ class Pizza(models.Model):
 	topping = models.CharField(max_length=1, choices=TOPPING_CHOICES, default=CHEESE)
 	buyer = models.ForeignKey(User, related_name="buyer")
 	driver = models.ForeignKey(Driver)
-	
-class Driver(models.Mode):
-	user = models.OneToOneField(User)
-	latitude = models.DecimalField(
-		max_digits=10,
-		decimal_places=5
-	)
-	longitude = models.DecimalField(
-		max_digits=10,
-		decimal_places=5
-	)
-	last_location_time = models.DateTimeField()
 	
