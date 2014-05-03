@@ -27,7 +27,7 @@ def delivered_pizzas(request):
 @login_required
 def to_deliver_pizzas(request):
 	pizzas = list()
-	for pizza in Pizza.object.select_related().filter(delivered=False).filter(driver=request.user.id):
+	for pizza in Pizza.objects.select_related().filter(delivered=False).filter(driver=request.user.id):
 		formatted_pizza = pizza_to_dict(pizza, customer=False)
 		pizzas.append(formatted_pizza)
 		
