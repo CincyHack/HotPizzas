@@ -3,8 +3,30 @@ from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from PizzaTracker.models import *
 
+@login_required
+def test(request):
+	pizzas_available = list()
+	for pizza in Pizza.objects.select_related().filter(delivered=False).filter(driver=request.user.id):
+		formatted_pizza = pizza_to_dict(pizza, customer=False)
+		pizzas_available.append(formatted_pizza)
+	
+	pizzas_delivered = list()
+	for pizza in Pizza.objects.select_related().filter(delivered=True).filter(driver=request.user.id):
+		formatted_pizza = pizza_to_dict(pizza)
+		pizzas_delivered.append(formatted_pizza)
+		
+	pizzas_to_deliver = list()
+	for pizza in Pizza.objects.select_related().filter(delivered=False).filter(driver=request.user.id):
+		formatted_pizza = pizza_to_dict(pizza, customer=False)
+		pizzas_to_deliver.append(formatted_pizza)
+	
+	ctx = {'pizzas_available': pizzas_available, 'pizzas_delivered': pizzas_delivered, 'pizzas_to_deliver': pizzas_to_deliver }
+	
+	render(request, 'driver-pizzas.html', ctx)
+
 def home(request):
-	return HttpResponse("Hello World")
+	return HttpResponse
+	
 
 @login_required
 def available_pizzas(request):
