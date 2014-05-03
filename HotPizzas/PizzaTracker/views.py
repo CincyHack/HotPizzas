@@ -8,15 +8,19 @@ def home(request):
 
 @login_required
 def available_pizzas(request):
-	pizzas = [
-		{
-			"cook_time": str(pizza.cook_time),
-			"price": pizza.price,
-			"topping": pizza.topping,
-			"customer_username": pizza.customer.username,
-			"customer_phone": pizza.customer.phone_number,
-		} for pizza in Pizza.objects.select_related().filter(driver=request.user.id)
-	]
+	pizzas = list()
+	for pizza in Pizza.objects.select_related().filter(driver=request.user.id):
+		formatted_pizza = dict()
+		formatted_pizza["cook_time"] = str(pizza.cook_time)
+		formatted_pizza["price"] = pizza.price
+		if pizza.customer:
+			formatted_pizza["customer_username"] = pizza.customer.username
+			formatted_pizza["customer_phone"] = pizza.customer.phone
+		else:
+			formatted_pizza["customer_username"] = ""
+			formatted_pizza["customer_phone"] = ""
+		pizzas.append(formatted_pizza)
+		
 	return HttpResponse(str(pizzas))
 
 @login_required
