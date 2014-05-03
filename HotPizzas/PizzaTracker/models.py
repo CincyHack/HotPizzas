@@ -13,7 +13,7 @@ class Pizza(models.Model):
 		(SAUSAGE, "Sausage"),
 	)
 	cook_time = models.DateTimeField()
-	price = models.DecimalField(max_digits=4, decimal_digits=2)
+	price = models.DecimalField(max_digits=4, decimal_places=2)
 	topping = models.CharField(max_length=1, choices=TOPPING_CHOICES, default=CHEESE)
 	buyer = models.ForeignKey(User, related_name="buyer")
 	driver = models.ForeignKey(Driver)
