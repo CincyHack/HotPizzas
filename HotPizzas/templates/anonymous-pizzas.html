@@ -9,7 +9,7 @@
   <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>HautePizzas</title>
+  <title>HotPizzas.us</title>
 
   <style>
 body > * {
@@ -62,7 +62,7 @@ body > * {
 
   <div class="panel panel-default">
     <div class="panel-heading">
-      <h2> HautePizzas<small> in your area</small></h2>
+      <h2>HotPizzas<small> in your area</small></h2>
     </div>
     <div id="prompt-host" class="panel-body">
       <div id="prompt-already-sold" class="alert alert-danger alert-dismissable"
@@ -151,43 +151,76 @@ var TESTING = true;
 if (TESTING) {
   var PIZZAS = [
     {
-      id: 0,
-      eta: 10,
-      price: '$10.00',
+      pizza_id: 0,
+      driver_longitude: 12.3456,
+      driver_latitude: 23.4567,
+      price: 99,
       topping: 'Pepperoni',
-      bought: false
     }, {
-      id: 1,
-      eta: 6,
-      price: '$5.00',
+      pizza_id: 1,
+      driver_longitude: -84.5167,
+      driver_latitude: 39.1000,
+      price: 500,
       topping: 'Pepperoni',
-      bought: false
     }, {
-      id: 2,
-      eta: 4,
-      price: '$5.00',
+      pizza_id: 2,
+      driver_longitude: -84.5167,
+      driver_latitude: 39.1000,
+      price: 500,
       topping: 'Cheese',
-      bought: false
     }, {
-      id: 3,
-      eta: 1,
-      price: '$7.00',
+      pizza_id: 3,
+      driver_longitude: -84.5167,
+      driver_latitude: 40.1000,
+      price: 699,
       topping: 'Pepperoni',
-      bought: false
     }, {
-      id: 4,
-      eta: 1,
-      price: '$5.00',
+      pizza_id: 4,
+      driver_longitude: -85.5167,
+      driver_latitude: 39.1000,
+      price: 499,
       topping: 'Sausage',
-      bought: false
     }, {
-      id: 5,
-      eta: 6,
-      price: '$10.00',
+      pizza_id: 5,
+      driver_longitude: -84.5097,
+      driver_latitude: 39.0650,
+      price: 999,
       topping: 'Cheese',
-      bought: false
     }
   ];
+}
+
+function setupCSRF() {
+  // using jQuery
+  function getCookie(name) {
+      var cookieValue = null;
+      if (document.cookie && document.cookie != '') {
+          var cookies = document.cookie.split(';');
+          for (var i = 0; i < cookies.length; i++) {
+              var cookie = jQuery.trim(cookies[i]);
+              // Does this cookie string begin with the name we want?
+              if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                  cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                  break;
+              }
+          }
+      }
+      return cookieValue;
+  }
+  var csrftoken = getCookie('csrftoken');
+
+  function csrfSafeMethod(method) {
+      // these HTTP methods do not require CSRF protection
+      return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+  }
+  $.ajaxSetup({
+      crossDomain: false, // obviates need for sameOrigin test
+      beforeSend: function(xhr, settings) {
+          if (!csrfSafeMethod(settings.type)) {
+              xhr.setRequestHeader("X-CSRFToken", csrftoken);
+          }
+      }
+  });
 }
 
 // Current geolocation position
@@ -210,8 +243,8 @@ Server.prototype = {
         dataType: 'json',
         async: true,
         data: {
-          long: gPosition.coords.longitude,
-          lat: gPosition.coords.latitude
+          longitude: gPosition.coords.longitude,
+          lattitude: gPosition.coords.latitude
         }
       });
     }
@@ -253,28 +286,31 @@ function Pizza(server, info) {
   /*
   Information about the pizza
   {
-    id: 123, // Server id for the pizza
-    eta: 2, // Estimated time to arrival in minutes
-    price: "$5.00", // Price as a string
+    pizza_id: 123, // Server id for the pizza
+    driver_latitude: 12.3456, // Driver position
+    driver_longitude: 65.4321, // Driver position
+    price: 99, // Price in cents
     topping: "Pepperoni", // Topping as a string
-    bought: true, // If user bought pizza
+    cook_time: "2014-05-04 00:06:05+00:00", // Time when cooked
   }
   */
   this._server = server;
   this._info = info;
+  this._bought = false;
 }
 
 Pizza.prototype = {
   // Buys the pizza
   buy: function() {
     if (TESTING) {
-      if (this._info.id > 3) {
+      if (this._info.pizza_id > 3) {
         return $.Deferred().reject();
-      } else if (this._info.id > 1) {
-        this._info.bought = true;
+      } else if (this._info.pizza_id > 1) {
+        this._bought = true;
       }
       return $.Deferred().resolve();
     }
+    var self = this;
     return $.ajax({
       type: 'post',
       url: this._url + '/pizzas/update',
@@ -287,6 +323,8 @@ Pizza.prototype = {
         name: $('#customer-name').val(),
         phone: $('#customer-tel').val()
       }
+    }).then(function(data) {
+      self._bought = true;
     });
   },
 
@@ -296,28 +334,49 @@ Pizza.prototype = {
     if (bought !== other.bought()) {
       return bought ? -1 : 1;
     }
-    if (this._info.eta !== other._info.eta) {
-      return this._info.eta - other._info.eta;
+    var myeta = this._eta(), othereta = other._eta();
+    if (myeta !== othereta) {
+      return myeta - othereta;
     }
-    return this._info.id - other._info.id;
+    return this.id() - other.id();
   },
+  copy: function(old) {
+    this._bought = old._bought;
+  },
+
   id: function() {
-    return this._info.id;
+    return this._info.pizza_id;
+  },
+
+  _eta: function() {
+    var driverLong = this._info.driver_longitude / 180 * Math.PI;
+    var driverLat = this._info.driver_latitude / 180 * Math.PI;
+    var myLong = gPosition.coords.longitude / 180 * Math.PI;
+    var myLat = gPosition.coords.latitude / 180 * Math.PI;
+    var highLat = Math.sin(driverLat) > Math.sin(myLat) ? driverLat : myLat;
+    // START MAGIC
+    var eta = (9501.01408 /* minutes */) * (Math.acos(Math.sin(highLat) * Math.sin(highLat) +
+        Math.cos(highLat) * Math.cos(highLat) * Math.cos(driverLong - myLong)) +
+      Math.acos(Math.sin(driverLat) * Math.sin(myLat) + Math.cos(driverLat) * Math.cos(myLat)));
+    // END MAGIC
+    return Math.round(eta);
   },
   eta: function() {
-    if (this._info.eta == 1) {
-      return this._info.eta + ' minute';
+    var eta = this._eta();
+    if (eta == 1) {
+      return eta + ' minute';
     }
-    return this._info.eta + ' minutes';
+    return eta + ' minutes';
   },
+
   price: function() {
-    return this._info.price;
+    return '$' + (this._info.price / 100).toFixed(2);
   },
   topping: function() {
     return this._info.topping;
   },
   bought: function() {
-    return this._info.bought;
+    return this._bought;
   }
 };
 
@@ -448,6 +507,7 @@ function refreshPizzas(server, fresh_ids) {
   var existing = $('#pizzas .pizza');
   var removing = $.grep(existing, function(row) {
     function refresh(pizza) {
+      pizza.copy($(row).data('pizza'));
       refreshPizza($(row).data('pizza', pizza));
     }
     for (var i = 0; i < fresh_ids.length; i++) {
@@ -505,6 +565,7 @@ $('#pizza-confirm').submit(function(e) {
 });
 
 $(function() {
+  setupCSRF();
   var server = new Server('http://hotpizzas.us');
   var geolocation = navigator.geolocation;
   if (!geolocation) {
@@ -533,13 +594,12 @@ $(function() {
     } else {
       gPosition = pos;
     }
-  }, function() {
+  }, function(e) {
     $('#prompt-find-pizzas').slideUp();
     showPrompt('#prompt-error');
   }, {
     enableHighAccuracy: true,
-    timeout: 5000,
-    maximumAge: 60000
+    maximumAge: 300000
   });
 });
   </script>
