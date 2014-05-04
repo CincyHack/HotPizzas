@@ -312,7 +312,7 @@ Pizza.prototype = {
     var self = this;
     return $.ajax({
       type: 'post',
-      url: this._url + '/pizzas/update/',
+      url: this._server._url + '/pizza/update/',
       dataType: 'json',
       async: true,
       data: {
