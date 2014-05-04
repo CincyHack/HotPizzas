@@ -7,7 +7,7 @@ from PizzaTracker.models import *
 def driver_dashboard(request):
 	pizzas_available = pizza_to_dict(request.user.id, delivered=False, customer=False)
 	pizzas_delivered = pizza_to_dict(request.user.id, delivered=True)
-	pizzas_to_deliver = pizza_to_dict(request.user.id, customer=False, delivered=False)
+	pizzas_to_deliver = pizza_to_dict(request.user.id, customer=True, delivered=False)
 	ctx = {'pizzas_available': pizzas_available, 'pizzas_delivered': pizzas_delivered, 'pizzas_to_deliver': pizzas_to_deliver }
 	
 	return render(request, 'driver-pizzas.html', ctx)
