@@ -117,7 +117,11 @@ Last Updated:
         {% for p in pizzas_to_deliver %}
           <div class="panel panel-default">
             <div class="panel-heading">
-              <h3 class="panel-title">{{ p.topping }} for ????? @ ${{ p.price }}</h3>
+              {% if p.customer_fullname %}
+                <h3 class="panel-title">{{ p.topping }} for {{ p.customer_fullname }} @ ${{ p.price }}</h3>
+              {% elif p.customer_username %}
+                <h3 class="panel-title">{{ p.topping }} for {{ p.customer_username }} @ ${{ p.price }}</h3>                
+              {% endif %}
             </div>
             <div class="panel-body">
               <div class="row">
