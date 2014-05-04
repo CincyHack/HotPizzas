@@ -3,6 +3,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.template.loader import render_to_string
 from PizzaTracker.models import *
+from PizzaTracker.forms import *
 import json
 
 @login_required
@@ -10,12 +11,25 @@ def customer_dashboard(request):
 	return render(request, 'customer-pizzas.html', {})
 	
 def anonymous_pizza_browser(request):
-	if request.method == 'POST':
+	if request.is_ajax() and request.method == 'POST':
 		form = LocationForm(request.POST)
 		if form.is_valid():
-			close_pizzas = Pizza.objects.select_related().filter(customer__isnull=true)
-			#TODO: return these close pizzas to display.
-			
+			unclaimed_pizzas = Pizza.objects.select_related().filter(customer__isnull=True)
+			close_pizzas = list()
+			for pizza in unclaimed_pizzas:
+				temp_pizza = dict()
+				temp_pizza["pizza_id"] = pizza.id
+				temp_pizza["cook_time"] = str(pizza.cook_time)
+				temp_pizza["price"] =  str(pizza.price)
+				temp_pizza["topping"] = pizza.get_topping_display()
+				temp_pizza["driver_longitude"] = str(pizza.driver.longitude)
+				temp_pizza["driver_latitude"] = str(pizza.driver.latitude)
+				close_pizzas.append(temp_pizza)
+				
+			#TODO: sort the pizza by location, send distance rather than lat/long
+			return HttpResponse(json.dumps(close_pizzas), content_type="application/json")
+		else:
+			return HttpResponse(json.dumps("sorry"), content_type="application/json")
 	else:
 		form = LocationForm()
 		
