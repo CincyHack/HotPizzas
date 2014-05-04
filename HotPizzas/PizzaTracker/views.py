@@ -28,7 +28,7 @@ def delivered_pizzas(request):
 
 @login_required
 def to_deliver_pizzas(request):
-	pizzas = pizza_to_dict(request.user.id, customer=False, delivered=False)
+	pizzas = pizza_to_dict(request.user.id, customer=True, delivered=False)
 	return HttpResponse(str(pizzas))
 
 def pizza_to_dict(user_id, customer=True, delivered=False):
