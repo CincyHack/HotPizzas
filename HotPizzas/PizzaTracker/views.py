@@ -93,6 +93,18 @@ def anonymous_pizza_browser(request):
 		
 	return render(request, 'anonymous-pizzas.html', {'form': form})
 
+def add_pizza(request):
+	if request.method == 'POST':
+		if request.is_ajax():
+			p = Pizza(
+				topping=request.POST.get('topping').upper(),
+				price=request.POST.get('price'),
+				driver=Driver.objects.get(pk=1),
+				cook_time=datetime.now()
+			)			
+			p.save()
+			return HttpResponse( json.dumps({'victory': True}), content_type='application/json' )
+
 @login_required
 def deliver_pizza(request):
 	if request.method == 'POST':

@@ -92,6 +92,18 @@
 
     }
 
+    function add_pizza() {
+      var topping = prompt('Which topping (c = cheese, s = sausage, p = pepperoni)?');
+      var price = prompt('How much?');
+      data = { 
+        'topping': topping, 
+        'price': price 
+      };
+      $.post('/add-pizza/', data, function(data){
+        update_pizzas();
+      });        
+    }
+
 
     /* -- geolocation -- */
 
@@ -142,10 +154,9 @@ Last Updated:
 
         <hr>
 
-<!--         <a href="" class="btn btn-primary btn-lg btn-block">Add a pizza</a>
-        <p>post price, topping</p>        
+        <button class="btn btn-primary btn-lg btn-block" onclick="add_pizza()">Add pizza</button>
         <hr>
-         -->        
+                
 
         <h2>My Pizzas</h2>
 
