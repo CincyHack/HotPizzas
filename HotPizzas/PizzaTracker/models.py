@@ -50,6 +50,7 @@ class Pizza(models.Model):
 	customer = models.ForeignKey(Customer, null=True, blank=True)
 	driver = models.ForeignKey(Driver)
 	delivered = models.BooleanField(default=False)
+	request_time = models.DateTimeField(null=True, blank=True)
 	
 	def __str__(self):
 		return str(self.driver) + " " + str(self.topping) + str(self.id)
