@@ -2,10 +2,23 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from PizzaTracker.models import *
+from PizzaTracker.forms import *
 
 @login_required
 def customer_dashboard(request):
 	return HttpResponse("I'm not done")
+	
+def anonymous_pizza_browser(request):
+	if request.method == POST:
+		form = LocationForm(request.POST)
+		if form.is_valid():
+			close_pizzas = Pizza.objects.select_related().filter(customer__isnull=true)
+			#TODO: return these close pizzas to display.
+			
+	else:
+		form = LocationForm()
+		
+	return render(request, 'anon-browser.html', {'form': form})
 
 @login_required
 def driver_dashboard(request):
