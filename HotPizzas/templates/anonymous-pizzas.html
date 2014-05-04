@@ -249,7 +249,9 @@ Server.prototype = {
     }
     var self = this;
     return request.then(function(infos) {
-      self._pizzas = {};
+      if (!self._pizzas) {
+        self._pizzas = {};
+      }
       $.each(infos, function() {
         var pizza = new Pizza(self, this);
         self._pizzas[pizza.id()] = pizza;
