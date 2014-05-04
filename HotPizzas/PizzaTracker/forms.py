@@ -22,7 +22,7 @@ class CustomerForm(forms.ModelForm):
 	
 	class Meta:
 		model = Customer
-		fields = ('phone_number', 'latitude', 'logitude')
+		fields = ('phone_number', 'latitude', 'longitude')
 		
 class PizzaForm(forms.ModelForm):
 	cook_time = forms.DateTimeField(initial=datetime.now())
