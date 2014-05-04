@@ -15,6 +15,9 @@ class Customer(models.Model):
 	)
 	last_location_time = models.DateTimeField()
 	
+	def __str__(self):
+		return str(user)
+	
 
 class Driver(models.Model):
 	user = models.OneToOneField(User)
@@ -27,6 +30,9 @@ class Driver(models.Model):
 		decimal_places=17
 	)
 	last_location_time = models.DateTimeField()
+	
+	def __str__(self):
+		return str(user)
 	
 
 class Pizza(models.Model):
@@ -44,3 +50,6 @@ class Pizza(models.Model):
 	customer = models.ForeignKey(Customer, null=True, blank=True)
 	driver = models.ForeignKey(Driver)
 	delivered = models.BooleanField(default=False)
+	
+	def __str__(self):
+		return str(driver) + " " + str(topping) + str(id)
