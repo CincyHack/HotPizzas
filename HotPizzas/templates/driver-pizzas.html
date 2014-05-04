@@ -23,7 +23,17 @@
         start_locating();
       }
       update_pizzas();
+      momentize();
     });
+
+
+    /* -- moment-izing timestamps -- */
+
+    function momentize() {
+      $('.momentize').each(function(idx){ 
+        $(this).html( moment($(this).data('timestamp')).fromNow() );
+      });
+    }
 
 
     /* -- pizzas ajax -- */
@@ -124,7 +134,7 @@ Last Updated:
             <div class="panel-body">
               <div class="row">
                 <div class="col-xs-12">
-                  <p>Requested: {{ p.request_time }}</p>
+                  <p title="{{ p.request_time }}">Requested <span class="momentize" data-timestamp="{{ p.request_time }}">xxx</span></p>
                   <hr>
                   <a href="comgooglemaps://?daddr={{ p.customer_latitude }},{{ p.customer_longitude }}&amp;directionsmode=traffic" class="btn btn-primary btn-block">Directions</a>
                   <a href="tel:{{ p.customer_phone }}" class="btn btn-success btn-block">Call</a>  
@@ -137,9 +147,9 @@ Last Updated:
         <h3><small><span class="glyphicon glyphicon-cutlery"></span></small> Available</h3>        
         <ul class="list-group">
           {% for p in pizzas_available %}
-            <li class="list-group-item list-group-item-success">
+            <li class="list-group-item list-group-item-success" title="{{ p.cook_time }}">
               <span class="badge">{{ p.price }}</span>
-              {{ p.topping }} <small>{{ p.cook_time }}</small>
+              <strong>{{ p.topping }}</strong> <small><span class="momentize" data-timestamp="{{ p.cook_time }}"></span></small>
             </li>
           {% endfor %}
         </ul>
