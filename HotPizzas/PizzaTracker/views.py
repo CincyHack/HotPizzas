@@ -41,7 +41,7 @@ def update_pizza(request):
 					}
 				)
 				user = user_form.save()
-				user.set_password(passoword)
+				user.set_password(password)
 				customer = Customer(
 					user=user,
 					longitude=request.POST.get("longitude"),
