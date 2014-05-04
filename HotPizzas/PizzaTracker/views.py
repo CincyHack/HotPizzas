@@ -74,9 +74,10 @@ def anonymous_pizza_browser(request):
 	if request.is_ajax() and request.method == 'POST':
 		form = LocationForm(request.POST)
 		if form.is_valid():
-			unclaimed_pizzas = Pizza.objects.select_related().filter(Q(customer__isnull=True) | Q(customer__user_id=request.user.id))
+			unclaimed_pizzas = Pizza.objects.select_related().filter(customer__isnull=True)
+			my_pizzas = Pizza.objects.select_related().filter(customer__user=request.user.id)
 			close_pizzas = list()
-			for pizza in unclaimed_pizzas:
+			for pizza in list(unclaimed_pizzas) + list(my_pizzas):
 				temp_pizza = dict()
 				temp_pizza["pizza_id"] = pizza.id
 				temp_pizza["cook_time"] = str(pizza.cook_time)
