@@ -5,6 +5,64 @@ from django.template.loader import render_to_string
 from PizzaTracker.models import *
 from PizzaTracker.forms import *
 import json
+import random
+import string
+from datetime import datetime
+
+def garbage_letters():
+	chars=string.ascii_uppercase + string.digits
+	return ''.join(random.choice(chars) for _ in range(15))
+
+def update_pizza(request):
+	if request.user.is_authenticated():
+		if request.is_ajax() and request.method == 'POST':
+			if request.POST.get("pizza_id")\
+			and request.POST.get("longitude")\
+			and request.POST.get("latitude"):
+				pizza = Pizza.objects.get(id=request.POST["pizza_id"])
+				pizza.customer = Customer.get(user__id = request.user.id)
+				pizza.save()
+				return HttpResponse(json.dumps({"was_bought": True}), content_type="application/json")
+				
+	else:
+		if request.is_ajax() and request.method == 'POST':
+			if request.POST.get("first_name")\
+			and request.POST.get("last_name")\
+			and request.POST.get("phone_number")\
+			and request.POST.get("pizza_id")\
+			and request.POST.get("longitude")\
+			and request.POST.get("latitude"):
+				username = garbage_letters()
+				password = garbage_letters()
+				user_form = UserForm(
+					{
+						'first_name': request.POST.get("first_name"),
+						'last_name': request.POST.get("last_name"),
+						'phone_number': request.POST.get("phone_number"),
+						'username': username,
+						'password': password
+					}
+				)
+				user = user_form.save()
+				user.set_password(password)
+				customer = Customer(
+					user=user,
+					longitude=request.POST.get("longitude"),
+					latitude=request.POST.get("latitude"),
+					last_location_time=datetime.now()
+				)
+				customer.save()
+				authenticate(username=username, password=password)
+				pizza = Pizza.object.get(id=request.POST["pizza_id"])
+				pizza.customer = customer
+				pizza.save()
+				return HttpResponse(json.dumps({"was_bought": True}), content_type="application/json")
+			else:
+				return HttpResponse(jsom.dumps("Invalid params 1"), content_type="application/json")
+	
+	return HttpResponse(json.dumps("sorry"), content_type="application/json")
+
+
 
 @login_required
 def customer_dashboard(request):
