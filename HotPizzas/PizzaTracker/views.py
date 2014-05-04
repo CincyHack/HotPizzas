@@ -19,9 +19,9 @@ def driver_dashboard(request):
 def home(request):
 	if request.user.is_authenticated():
 		if len(list(Driver.objects.filter(user=request.user.id))) != 0:
-			HttpResponseRedirect('/driver/')
+			return HttpResponseRedirect('/driver/')
 		else:
-			HttpResponseRedirect('/customer/')
+			return HttpResponseRedirect('/customer/')
 	else:
 		return HttpResponse("Hype page goes here")
 	
