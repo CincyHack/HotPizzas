@@ -1,8 +1,9 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
+from django.template.loader import render_to_string
 from PizzaTracker.models import *
-from PizzaTracker.forms import *
+import json
 
 @login_required
 def customer_dashboard(request):
@@ -25,10 +26,11 @@ def driver_dashboard(request):
 	pizzas_available = available_pizzas_as_dict(request.user.id)
 	pizzas_delivered = pizza_to_dict(request.user.id, delivered=True)  # TODO: change this one to match the other two?
 	pizzas_to_deliver = to_deliver_pizzas_as_dict(request.user.id)
-
 	ctx = {'pizzas_available': pizzas_available, 'pizzas_delivered': pizzas_delivered, 'pizzas_to_deliver': pizzas_to_deliver }
-	
-	return render(request, 'driver-pizzas.html', ctx)
+	if request.is_ajax():
+		return HttpResponse(render_to_string('driver-pizzas-ajax.html', ctx))
+	else:
+		return render(request, 'driver-pizzas.html', ctx)
 
 def home(request):
 	if request.user.is_authenticated():

@@ -1,0 +1,41 @@
+<h3><small><span class="glyphicon glyphicon-time"></span></small> En Route</h3>        
+{% for p in pizzas_to_deliver %}
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title">{{ p.topping }} for {{ p.customer_fullname_or_username }} @ {{ p.price }}</h3>
+    </div>
+    <div class="panel-body">
+      <div class="row">
+        <div class="col-xs-12">
+          <p title="{{ p.request_time }}">Requested <span class="momentize" data-timestamp="{{ p.request_time }}">xxx</span></p>
+          <hr>
+          <a href="comgooglemaps://?daddr={{ p.customer_latitude }},{{ p.customer_longitude }}&amp;directionsmode=traffic" class="btn btn-primary btn-block">Directions</a>
+          <a href="tel:{{ p.customer_phone }}" class="btn btn-success btn-block">Call</a>  
+        </div>      
+      </div>
+    </div>
+  </div>
+{% endfor %}
+
+<h3><small><span class="glyphicon glyphicon-cutlery"></span></small> Available</h3>        
+<ul class="list-group">
+  {% for p in pizzas_available %}
+    <li class="list-group-item list-group-item-success" title="{{ p.cook_time }}">
+      <span class="badge">{{ p.price }}</span>
+      <strong>{{ p.topping }}</strong> <small><span class="momentize" data-timestamp="{{ p.cook_time }}"></span></small>
+    </li>
+  {% endfor %}
+</ul>
+
+<h3><small><span class="glyphicon glyphicon-check"></span></small> Delivered</h3>
+<ul class="list-group">
+  {% for p in pizzas_delivered %}
+    <li class="list-group-item list-group-item-success">
+      {% if p.customer_fullname %}
+        <strong>{{ p.customer_fullname }}</strong> <small>{{ p.topping }}</small>
+      {% elif p.customer_username %}
+        <strong>{{ p.customer_username }}</strong> <small>{{ p.topping }}</small>
+      {% endif %}
+    </li>
+  {% endfor %}
+</ul>        
