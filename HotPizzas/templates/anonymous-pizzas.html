@@ -252,6 +252,11 @@ Server.prototype = {
       if (!self._pizzas) {
         self._pizzas = {};
       }
+      $.each(Object.keys(self._pizzas), function() {
+        if (!self._pizzas[this].bought()) {
+          delete self._pizzas[this];
+        }
+      });
       $.each(infos, function() {
         var pizza = new Pizza(self, this);
         self._pizzas[pizza.id()] = pizza;
@@ -339,6 +344,9 @@ Pizza.prototype = {
     var myeta = this._eta(), othereta = other._eta();
     if (myeta !== othereta) {
       return myeta - othereta;
+    }
+    if (this._info.price / 1.0 !== other._info.price / 1.0) {
+      return this._info.price / 1.0 - other._info.price / 1.0;
     }
     return this.id() - other.id();
   },
