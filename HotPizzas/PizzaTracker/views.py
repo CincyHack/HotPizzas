@@ -45,7 +45,9 @@ def pizza_to_dict(user_id, customer=True, delivered=False):
 			formatted_pizza["customer_latitude"] = pizza.customer.latitude
 			formatted_pizza["customer_longitude"] = pizza.customer.longitude
 			if pizza.customer.user.last_name != None and pizza.customer.user.first_name != None:
-				formatted_pizza["customer_fistname"] = pizza.customer.user.first_name + pizza.customer.user.last_name
+				formatted_pizza["customer_fullname"] = pizza.customer.user.first_name \
+				+ " " \
+				+ pizza.customer.user.last_name
 			else:
 				formatted_pizza["customer_fullname"] = ""
 
