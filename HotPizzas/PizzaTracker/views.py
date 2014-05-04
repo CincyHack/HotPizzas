@@ -22,7 +22,7 @@ def anonymous_pizza_browser(request):
 				temp_pizza["price"] =  str(pizza.price)
 				temp_pizza["topping"] = pizza.get_topping_display()
 				temp_pizza["driver_logitude"] = pizza.driver.longitude
-				temp_pizza["driver_latitude"] = pizza.driver.lattitude
+				temp_pizza["driver_latitude"] = pizza.driver.latitude
 				close_pizzas.append(temp_pizza)
 				
 			#TODO: sort the pizza by location, send distance rather than lat/long
