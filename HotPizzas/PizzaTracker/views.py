@@ -7,10 +7,10 @@ import json
 
 @login_required
 def customer_dashboard(request):
-	return HttpResponse("I'm not done")
+	return render(request, 'customer-pizzas.html', {})
 	
 def anonymous_pizza_browser(request):
-	if request.method == POST:
+	if request.method == 'POST':
 		form = LocationForm(request.POST)
 		if form.is_valid():
 			close_pizzas = Pizza.objects.select_related().filter(customer__isnull=true)
@@ -19,7 +19,7 @@ def anonymous_pizza_browser(request):
 	else:
 		form = LocationForm()
 		
-	return render(request, 'anon-browser.html', {'form': form})
+	return render(request, 'anonymous-pizzas.html', {'form': form})
 
 @login_required
 def driver_dashboard(request):

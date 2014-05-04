@@ -1,7 +1,13 @@
-from django.forms import ModelForm
+from django import forms
 from django.contrib.auth.models import User
 from PizzaTracker.models import *
 from datetime import datetime
+
+
+class LocationForm(forms.Form):
+	latitude = forms.DecimalField(widget=forms.HiddenInput(), max_digits=20, decimal_places=17)
+	longitude = forms.DecimalField(widget=forms.HiddenInput(), max_digits=20, decimal_places=17)
+
 
 class UserForm(forms.ModelForm):
 	username = forms.CharField(help_text="Please enter a username.")
@@ -22,7 +28,7 @@ class CustomerForm(forms.ModelForm):
 	
 	class Meta:
 		model = Customer
-		fields = ('phone_number', 'latitude', 'logitude')
+		fields = ('phone_number', 'latitude', 'longitude')
 		
 class PizzaForm(forms.ModelForm):
 	cook_time = forms.DateTimeField(initial=datetime.now())
@@ -39,3 +45,4 @@ class DriverForm(forms.ModelForm):
 	class Meta:
 		model = Driver
 		fields = ('latitude', 'longitude')
+

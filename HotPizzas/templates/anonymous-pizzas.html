@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="http://code.jquery.com/jquery.min.js"></script>
+  <script src="http://code.jquery.com/ui/jquery-ui.min.js"></script>
+  <script src="http://getbootstrap.com/dist/js/bootstrap.js"></script>
+  <link href="http://getbootstrap.com/dist/css/bootstrap.css" rel="stylesheet" type="text/css" />
+  <link href="http://getbootstrap.com/2.3.2/assets/css/bootstrap-responsive.css" rel="stylesheet" type="text/css" />
+  <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HautePizzas</title>
+
+  <style>
+body > * {
+  max-width: 800px;
+  margin: 20px auto;
+}
+.panel-body {
+  padding: 0px !important;
+}
+.panel-body > * {
+  margin: 10px;
+}
+.pizza {
+  display: block;
+  padding: 5px;
+  border: solid 1px #eee;
+}
+.pizza.bg-success {
+  border: solid 1px #ede;
+}
+.pizza > div {
+  vertical-align: middle;
+  padding: 5px;
+  display: inline-block;
+}
+.pizza-topping {
+  width: 29%;
+}
+.pizza-eta {
+  width: 24%;
+}
+.pizza-price {
+  width: 19%;
+  text-align: right;
+}
+.pizza-buy {
+  width: 24%;
+}
+.pizza-buy .btn, #pizza-confirm .btn {
+  width: 100%;
+}
+#pizza-confirm {
+  display: block;
+  padding: 10px;
+}
+  </style>
+
+</head>
+<body>
+
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h2> HautePizzas<small> in your area</small></h2>
+    </div>
+    <div id="prompt-host" class="panel-body">
+      <div id="prompt-already-sold" class="alert alert-danger alert-dismissable"
+           style="display: none">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        <strong>Oops!</strong> That one was already sold.
+      </div>
+      <div id="prompt-error" class="alert alert-danger alert-dismissable"
+           style="display: none">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        <strong>Oops!</strong> Something went wrong. Blame Bob.
+      </div>
+    </div>
+
+    <form id="pizza-confirm" role="form"
+          style="display: none">
+      <div class="form-group">
+        <label class="sr-only"
+               for="customer-name">Name</label>
+        <input id="customer-name" type="text"
+               placeholder="Name"
+               class="form-control" required
+               pattern="\S.*">
+      </div>
+      <div class="form-group">
+        <label class="sr-only"
+               for="customer-tel">Phone</label>
+        <input id="customer-tel" type="tel"
+               placeholder="Phone number"
+               class="form-control" required
+               pattern="[\+\d-\.\s]{4,}">
+      </div>
+      <button type="submit" class="btn btn-success">
+        Confirm Order
+      </button>
+    </form>
+
+    <ul id="pizzas" class="list-group">
+      <!--
+      <li class="pizza bg-success">
+        <div class="pizza-topping">Pepperoni</div>
+        <div class="pizza-eta">2 minutes</div>
+        <div class="pizza-price">$5.00</div>
+        <div class="pizza-buy">
+          <input class="btn btn-default"
+                 type="button" value="Buy">
+        </div>
+      </li>
+      <li class="pizza">
+        <div class="pizza-topping">Cheese</div>
+        <div class="pizza-eta">10 minutes</div>
+        <div class="pizza-price">$10.00</div>
+        <div class="pizza-buy">
+          <input class="btn btn-default"
+                 type="button" value="Buy">
+        </div>
+      </li>
+      <li class="pizza">
+        <div class="pizza-topping">Cheese</div>
+        <div class="pizza-eta">10 minutes</div>
+        <div class="pizza-price">$10.00</div>
+        <div class="pizza-buy">
+          <input class="btn btn-default"
+                 type="button" value="Buy">
+        </div>
+      </li>
+      -->
+    </ul>
+
+    <div class="panel-body bg-info">
+      <div id="prompt-find-location">
+        <i class="fa fa-spinner fa-spin"></i>
+        Finding your location
+      </div>
+      <div id="prompt-find-pizzas"
+           style="display: none">
+        <i class="fa fa-spinner fa-spin"></i>
+        Finding pizzas near you
+      </div>
+    </div>
+  </div>
+
+  <script>
+var TESTING = true;
+
+if (TESTING) {
+  var PIZZAS = [
+    {
+      id: 0,
+      eta: 10,
+      price: '$10.00',
+      topping: 'Pepperoni',
+      bought: false
+    }, {
+      id: 1,
+      eta: 6,
+      price: '$5.00',
+      topping: 'Pepperoni',
+      bought: false
+    }, {
+      id: 2,
+      eta: 4,
+      price: '$5.00',
+      topping: 'Cheese',
+      bought: false
+    }, {
+      id: 3,
+      eta: 1,
+      price: '$7.00',
+      topping: 'Pepperoni',
+      bought: false
+    }, {
+      id: 4,
+      eta: 1,
+      price: '$5.00',
+      topping: 'Sausage',
+      bought: false
+    }, {
+      id: 5,
+      eta: 6,
+      price: '$10.00',
+      topping: 'Cheese',
+      bought: false
+    }
+  ];
+}
+
+function Server(url) {
+  this._url = url;
+}
+
+Server.prototype = {
+  // Find pizzas near (long, lat) and return a deferred array of pizza ids
+  findPizzas: function(long, lat) {
+    var request;
+    if (TESTING) {
+      request = $.Deferred().resolve(PIZZAS);
+    } else {
+      request = $.ajax({
+        type: 'post',
+        url: this._url + '/pizzas/closest',
+        dataType: 'json',
+        async: true,
+        data: {
+          long: long,
+          lat: lat
+        }
+      });
+    }
+    var self = this;
+    return request.then(function(infos) {
+      self._pizzas = {};
+      $.each(infos, function() {
+        var pizza = new Pizza(self, this);
+        self._pizzas[pizza.id()] = pizza;
+      });
+      return Object.keys(self._pizzas);
+    });
+  },
+
+  // Get pizza object with id and return deferred pizza object
+  getPizza: function(id) {
+    if (this._pizzas) {
+      return $.Deferred().resolve(this._pizzas[id]);
+    }
+    var request;
+    if (TESTING) {
+      request = $.Deferred().resolve(PIZZAS[id]);
+    } else {
+      request = $.ajax({
+        type: 'get',
+        url: this._url + '/pizza/' + id,
+        dataType: 'json',
+        async: true
+      });
+    }
+    var self = this;
+    return request.then(function(info) {
+      return new Pizza(self, info);
+    });
+  }
+};
+
+function Pizza(server, info) {
+  /*
+  Information about the pizza
+  {
+    id: 123, // Server id for the pizza
+    eta: 2, // Estimated time to arrival in minutes
+    price: "$5.00", // Price as a string
+    topping: "Pepperoni", // Topping as a string
+    bought: true, // If user bought pizza
+  }
+  */
+  this._server = server;
+  this._info = info;
+}
+
+Pizza.prototype = {
+  // Buys the pizza
+  buy: function() {
+    if (TESTING) {
+      if (this._info.id > 3) {
+        return $.Deferred().reject();
+      } else if (this._info.id > 1) {
+        this._info.bought = true;
+      }
+      return $.Deferred().resolve();
+    }
+    // TODO: actually buy pizza
+    return $.Deferred().reject();
+  },
+  // Returns number < 0 or > 0 depending on if this pizza should be ranked higher or lower than other pizza, respectively
+  compare: function(other) {
+    var bought = this.bought();
+    if (bought !== other.bought()) {
+      return bought ? -1 : 1;
+    }
+    if (this._info.eta !== other._info.eta) {
+      return this._info.eta - other._info.eta;
+    }
+    return this._info.id - other._info.id;
+  },
+  id: function() {
+    return this._info.id;
+  },
+  eta: function() {
+    if (this._info.eta == 1) {
+      return this._info.eta + ' minute';
+    }
+    return this._info.eta + ' minutes';
+  },
+  price: function() {
+    return this._info.price;
+  },
+  topping: function() {
+    return this._info.topping;
+  },
+  bought: function() {
+    return this._info.bought;
+  }
+};
+
+var Confirmation = {
+  attach: function(row) {
+    if (row.has('#pizza-confirm').length) {
+      return $.Deferred().resolve();
+    }
+    return Confirmation.detach($('#pizzas'))
+      .done(function() {
+        row.find('.pizza-buy .btn')
+          .button('cancel')
+          .addClass('btn-warning')
+          .removeClass('btn-success');
+        return $('#pizza-confirm').detach()
+          .appendTo(row).slideDown().promise();
+      });
+  },
+  detach: function(row) {
+    if (!row.has('#pizza-confirm').length) {
+      return $.Deferred().resolve();
+    }
+    if ($('#pizzas').has('#pizza-confirm').length) {
+      $('#pizza-confirm').parent()
+        .find('.pizza-buy .btn')
+        .button('reset')
+        .addClass('btn-success')
+        .removeClass('btn-warning');
+    }
+    return $('#pizza-confirm').slideUp()
+      .promise().done(function() {
+      return $('#pizza-confirm').detach()
+        .insertBefore('#pizzas').promise();
+    });
+  }
+};
+
+function createPizzas(pizzas) {
+  // create a row for each pizza
+  return $.when.apply($, $.map(pizzas, function(p) {
+    if (!p) {
+      return;
+    }
+    return p.then(function(pizza) {
+      var row = $('<li/>')
+        .addClass('pizza');
+      return appendPizza(row.append(
+        $('<div/>', {
+          text: pizza.topping()
+        }).addClass('pizza-topping'),
+        $('<div/>', {
+          text: pizza.eta()
+        }).addClass('pizza-eta'),
+        $('<div/>', {
+          text: pizza.price()
+        }).addClass('pizza-price'),
+        $('<div/>')
+          .addClass('pizza-buy')
+          .append(
+          $('<button/>', {
+            type: 'button',
+            text: 'Order'})
+          .addClass('btn btn-success')
+          .data('loading-text',
+            '<i class="fa fa-spinner fa-spin"></i>')
+          .data('cancel-text', 'Cancel')
+          .button()
+          .click(function() {
+            return !row.has('#pizza-confirm').length ?
+              Confirmation.attach(row) :
+              Confirmation.detach(row);
+          })))
+      .data('pizza', pizza));
+    });
+  }));
+}
+
+function appendPizza(row) {
+  var pizza = row.data('pizza');
+  var next = $('#pizzas .pizza').filter(function() {
+    // True if pizza should be placed lower than pizza associated with this row
+    return pizza.compare($(this).data('pizza')) < 0;
+  }).first();
+
+  row.hide();
+  if (next.length) {
+    row.insertBefore(next);
+  } else {
+    row.appendTo($('#pizzas'));
+  }
+  return row.slideDown().promise();
+}
+
+function refreshPizza(row) {
+  var pizza = row.data('pizza');
+  var bought = pizza.bought() !==
+               row.hasClass('bg-success');
+  var prev = row.prev().data('pizza');
+  var next = row.next().data('pizza');
+  if ((prev && pizza.compare(prev) < 0) ||
+      (next && pizza.compare(next) > 0) ||
+      bought) {
+    // If order changed, detach then reattach row
+    return row.slideUp().promise().done(function() {
+      row.detach();
+      if (pizza.bought()) {
+        Confirmation.detach(row);
+        row.addClass('bg-success');
+        row.find('.btn')
+           .removeClass('btn-success')
+           .text('On its way!')
+           .prop('disabled', true);
+      }
+      return appendPizza(row);
+    });
+  }
+  return $.Deferred().resolve();
+}
+
+function removePizza(row) {
+  Confirmation.detach(row);
+  return row.slideUp().promise().done(function() {
+    row.remove();
+  });
+}
+
+function refreshPizzas(server, fresh_ids) {
+  var existing = $('#pizzas .pizza');
+  var removing = $.grep(existing, function(row) {
+    function refresh(pizza) {
+      refreshPizza($(row).data('pizza', pizza));
+    }
+    for (var i = 0; i < fresh_ids.length; i++) {
+      if (fresh_ids[i] !== null &&
+          '' + fresh_ids[i] === '' + $(row).data('pizza').id()) {
+        server.getPizza(fresh_ids[i]).then(refresh);
+        fresh_ids[i] = null;
+        return false;
+      }
+    }
+    return true;
+  });
+  // Remove obsolete entries
+  $.each(removing, function() {
+    removePizza($(this));
+  });
+  // Add new entries
+  return createPizzas($.map(fresh_ids, function(id) {
+    return id !== null ? server.getPizza(id) : null;
+  }));
+}
+
+function showPrompt(type) {
+  $(type)
+    .clone()
+    .removeAttr('id')
+    .appendTo($('#prompt-host'))
+    .slideDown()
+    .delay(4000)
+    .slideUp()
+    .promise().done(function() {
+      this.remove();
+    });
+}
+
+$('#pizza-confirm').submit(function(e) {
+  var row = $('#pizza-confirm').parent();
+  var pizza = row.data('pizza');
+  Confirmation.detach(row);
+  row.find('.pizza-buy .btn')
+    .button('loading');
+  pizza.buy().then(function success() {
+    if (pizza.bought()) {
+      return refreshPizza(row);
+    } else {
+      showPrompt('#prompt-already-sold');
+      return removePizza(row);
+    }
+  }, function failure() {
+    showPrompt('#prompt-error');
+    row.find('.btn').button('reset');
+  });
+  e.preventDefault();
+  return false;
+});
+
+$(function() {
+  var server = new Server('http://myserver');
+  var geolocation = navigator.geolocation;
+  if (!geolocation) {
+    // TODO: geolocation IS NOT available
+    return;
+  }
+  var position;
+  $('#prompt-find-location').slideDown();
+  function updatePosition() {
+    $('#prompt-find-location').slideUp();
+    $('#prompt-find-pizzas').slideDown();
+    server.findPizzas(
+      position.coords.longitude,
+      position.coords.latitude
+    ).then(function(ids) {
+      return refreshPizzas(server, ids);
+    }).always(function() {
+      $('#prompt-find-pizzas').slideUp();
+      setTimeout(updatePosition, 10000);
+    });
+  }
+  geolocation.watchPosition(function(pos) {
+    $('#prompt-find-pizzas').slideUp();
+    if (!position) {
+      position = pos;
+      updatePosition();
+    } else {
+      position = pos;
+    }
+  }, function() {
+    $('#prompt-find-pizzas').slideUp();
+  }, {
+    enableHighAccuracy: true,
+    timeout: 5000,
+    maximumAge: 60000
+  });
+});
+  </script>
+</body>
+</html>
