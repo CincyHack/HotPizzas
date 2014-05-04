@@ -28,7 +28,7 @@ def delivered_pizzas(request):
 
 @login_required
 def to_deliver_pizzas(request):
-	pizzas = pizza_to_dict(request.user.id, customer=False, delivered=False)
+	pizzas = pizza_to_dict(request.user.id, customer=True, delivered=False)
 	return HttpResponse(str(pizzas))
 
 def pizza_to_dict(user_id, customer=True, delivered=False):
@@ -41,7 +41,7 @@ def pizza_to_dict(user_id, customer=True, delivered=False):
 		formatted_pizza["topping"] = pizza.topping
 		if pizza.customer != None:
 			formatted_pizza["customer_username"] = pizza.customer.user.username
-			formatted_pizza["customer_phone"] = pizza.customer.phone
+			formatted_pizza["customer_phone"] = pizza.customer.phone_number
 			formatted_pizza["customer_latitude"] = pizza.customer.latitude
 			formatted_pizza["customer_longitude"] = pizza.customer.longitude
 			if pizza.customer.user.lastname != None and pizza.customer.user.firstname != None:
