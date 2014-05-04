@@ -16,7 +16,7 @@ def anonymous_pizza_browser(request):
 		if form.is_valid():
 			unclaimed_pizzas = Pizza.objects.select_related().filter(customer__isnull=True)
 			close_pizzas = list()
-			for pizzas in unclaimed_pizzas:
+			for pizza in unclaimed_pizzas:
 				temp_pizza = dict()
 				temp_pizza["cook_time"] = str(pizza.cook_time)
 				temp_pizza["price"] =  str(pizza.price)
