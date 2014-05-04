@@ -6,7 +6,7 @@ from PizzaTracker.forms import *
 
 @login_required
 def customer_dashboard(request):
-	return render(reques, 'customer-pizzas.html', {})
+	return render(request, 'customer-pizzas.html', {})
 	
 def anonymous_pizza_browser(request):
 	if request.method == POST:
