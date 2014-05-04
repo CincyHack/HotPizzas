@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from PizzaTracker.models import *
 
 @login_required
-def test(request):
+def driver_dashboard(request):
 	pizzas_available = list()
 	for pizza in Pizza.objects.select_related().filter(delivered=False).filter(driver__user_id=request.user.id):
 		formatted_pizza = pizza_to_dict(pizza, customer=False)
@@ -61,11 +61,19 @@ def pizza_to_dict(pizza, customer=True):
 	formatted_pizza["price"] = str(pizza.price)
 	formatted_pizza["topping"] = pizza.topping
 	if customer and pizza.customer != None:
-		formatted_pizza["customer_username"] = pizza.customer.username
+		formatted_pizza["customer_username"] = pizza.customer.user.username
 		formatted_pizza["customer_phone"] = pizza.customer.phone
+		formatted_pizza["customer_latitude"] = pizza.customer.latitude
+		formatted_pizza["customer_longitude"] = pizza.customer.longitude
+		if pizza.customer.user.lastname != None and pizza.customer.user.firstname != None:
+			formatted_pizza["customer_fistname"] = pizza.customer.user.firstname + pizza.customer.user.lastname
+		else:
+			formatted_pizza["customer_fullname"] = ""
+
 	elif customer:
 		formatted_pizza["customer_username"] = ""
 		formatted_pizza["customer_phone"] = ""
+		formatted_pizza["customer_fullname"] = ""
 	
 	return formatted_pizza
 
