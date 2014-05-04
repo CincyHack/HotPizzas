@@ -36,7 +36,7 @@ def home(request):
 		else:
 			return HttpResponseRedirect('/customer/')
 	else:
-		return HttpResponse("Hype page goes here")
+		return HttpResponseRedirect('/pizzas/closest/')
 	
 
 @login_required
