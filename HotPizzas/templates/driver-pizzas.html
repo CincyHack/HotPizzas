@@ -136,26 +136,14 @@ Last Updated:
           </div>
         {% endfor %}
 
-
-        
         <h3><small><span class="glyphicon glyphicon-cutlery"></span></small> Available</h3>        
         <ul class="list-group">
-          <li class="list-group-item list-group-item-success">
-            <span class="badge">0m</span>
-            Pepperoni
-          </li>
-          <li class="list-group-item list-group-item-success">
-            <span class="badge">4m</span>
-            Supreme
-          </li>
-          <li class="list-group-item list-group-item-warning">
-            <span class="badge">20m</span>
-            Cheese
-          </li>
-          <li class="list-group-item list-group-item-danger">
-            <span class="badge">65m</span>
-            Pepperoni
-          </li>
+          {% for p in pizzas_available %}
+            <li class="list-group-item list-group-item-success">
+              <span class="badge">{{ p.price }}</span>
+              {{ p.topping }} <small>{{ p.cook_time }}</small>
+            </li>
+          {% endfor %}
         </ul>
         
         <h3><small><span class="glyphicon glyphicon-check"></span></small> Delivered</h3>
@@ -172,25 +160,6 @@ Last Updated:
         </ul>        
       </div>
     </div>
-  </div>
-
-
-
-
-
-
-
-  <div>
-    
-    <p><b>available</b></p>
-    {% for p in pizzas_available %}
-      <p>
-        {{ p.topping }}
-        {{ p.price }}
-        {{ p.cook_time }}
-      </p>
-    {% endfor %}
-
   </div>
 
 {% endblock %}
