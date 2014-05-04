@@ -324,7 +324,7 @@ Pizza.prototype = {
         phone_number: $('#customer-tel').val()
       }
     }).then(function(data) {
-      self._bought = true;
+      self._bought = data.was_bought;
     });
   },
 
