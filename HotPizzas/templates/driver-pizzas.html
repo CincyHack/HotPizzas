@@ -138,7 +138,7 @@ Last Updated:
         <ul class="list-group">
           {% for p in pizzas_available %}
             <li class="list-group-item list-group-item-success">
-              <span class="badge">{{ p.price }}</span>
+              <span class="badge">${{ p.price }}</span>
               {{ p.topping }} <small>{{ p.cook_time }}</small>
             </li>
           {% endfor %}
