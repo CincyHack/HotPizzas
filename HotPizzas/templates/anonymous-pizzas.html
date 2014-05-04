@@ -370,7 +370,7 @@ Pizza.prototype = {
   },
 
   price: function() {
-    return '$' + (this._info.price / 100).toFixed(2);
+    return '$' + (this._info.price).toFixed(2);
   },
   topping: function() {
     return this._info.topping;
@@ -583,7 +583,7 @@ $(function() {
       showPrompt('#prompt-error');
     }).always(function() {
       $('#prompt-find-pizzas').slideUp();
-      setTimeout(updatePosition, 15000);
+      setTimeout(updatePosition, 1000);
     });
   }
   geolocation.watchPosition(function(pos) {
