@@ -252,6 +252,11 @@ Server.prototype = {
       if (!self._pizzas) {
         self._pizzas = {};
       }
+      $.each(Object.keys(self._pizzas), function() {
+        if (!self._pizzas[this].bought()) {
+          delete self._pizzas[this];
+        }
+      });
       $.each(infos, function() {
         var pizza = new Pizza(self, this);
         self._pizzas[pizza.id()] = pizza;
