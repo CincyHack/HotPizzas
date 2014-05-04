@@ -584,12 +584,11 @@ $(function() {
     }).fail(function() {
       showPrompt('#prompt-error');
     }).always(function() {
-      $('#prompt-find-pizzas').slideUp();
+      //$('#prompt-find-pizzas').slideUp();
       setTimeout(updatePosition, 1000);
     });
   }
   geolocation.watchPosition(function(pos) {
-    //$('#prompt-find-pizzas').slideUp();
     if (!gPosition) {
       gPosition = pos;
       updatePosition();
@@ -597,7 +596,6 @@ $(function() {
       gPosition = pos;
     }
   }, function(e) {
-    //$('#prompt-find-pizzas').slideUp();
     showPrompt('#prompt-error');
   }, {
     enableHighAccuracy: true,
