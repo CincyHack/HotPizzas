@@ -19,8 +19,11 @@ def update_pizza(request):
 			if request.POST.get("pizza_id")\
 			and request.POST.get("longitude")\
 			and request.POST.get("latitude"):
-				#FIXME: Make this the user's pizza
-				pass
+				pizza = Pizza.objects.get(id=request.POST["pizza_id"])
+				pizza.customer = Customer.get(user__id = request.user.id)
+				pizza.save()
+				return HttpResponse(json.dumps({"was_bought": True}), content_type="application/json")
+				
 	else:
 		if request.is_ajax() and request.method == 'POST':
 			if request.POST.get("first_name")\
@@ -50,7 +53,10 @@ def update_pizza(request):
 				)
 				customer.save()
 				authenticate(username=username, password=password)
-				#FIXME: make pizza this user's pizza now
+				pizza = Pizza.object.get(id=request.POST["pizza_id"])
+				pizza.customer = customer
+				pizza.save()
+				return HttpResponse(json.dumps({"was_bought": True}), content_type="application/json")
 			else:
 				return HttpResponse(jsom.dumps("Invalid params 1"), content_type="application/json")
 	
