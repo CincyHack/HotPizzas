@@ -319,8 +319,9 @@ Pizza.prototype = {
         pizza_id: this._info.pizza_id,
         longitude: gPosition.coords.longitude,
         latitude: gPosition.coords.latitude,
-        name: $('#customer-name').val(),
-        phone: $('#customer-tel').val()
+        first_name: $('#customer-name').val(),
+        last_name: '(anon)';
+        phone_number: $('#customer-tel').val()
       }
     }).then(function(data) {
       self._bought = true;
