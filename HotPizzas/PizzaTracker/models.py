@@ -16,7 +16,7 @@ class Customer(models.Model):
 	last_location_time = models.DateTimeField()
 	
 	def __str__(self):
-		return str(user)
+		return str(self.user)
 	
 
 class Driver(models.Model):
@@ -32,7 +32,7 @@ class Driver(models.Model):
 	last_location_time = models.DateTimeField()
 	
 	def __str__(self):
-		return str(user)
+		return str(self.user)
 	
 
 class Pizza(models.Model):
@@ -52,4 +52,4 @@ class Pizza(models.Model):
 	delivered = models.BooleanField(default=False)
 	
 	def __str__(self):
-		return str(driver) + " " + str(topping) + str(id)
+		return str(self.driver) + " " + str(self.topping) + str(self.id)
