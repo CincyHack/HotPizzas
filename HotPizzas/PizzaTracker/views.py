@@ -52,7 +52,7 @@ def update_pizza(request):
 				authenticate(username=username, password=password)
 				#FIXME: make pizza this user's pizza now
 			else:
-				return HttpResponse(jsom.dumps("Invalid params 1", content_type="application/json")
+				return HttpResponse(jsom.dumps("Invalid params 1"), content_type="application/json")
 	
 	return HttpResponse(json.dumps("sorry"), content_type="application/json")
 
