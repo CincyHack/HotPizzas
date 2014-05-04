@@ -8,6 +8,7 @@ import json
 import random
 import string
 from datetime import datetime
+from django.contrib.auth import authenticate
 
 def garbage_letters():
 	chars=string.ascii_uppercase + string.digits
