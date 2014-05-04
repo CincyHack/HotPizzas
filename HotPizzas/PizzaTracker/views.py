@@ -22,6 +22,15 @@ def anonymous_pizza_browser(request):
 	return render(request, 'anonymous-pizzas.html', {'form': form})
 
 @login_required
+def deliver_pizza(request):
+	if request.method == 'POST':
+		if request.is_ajax():
+			p = Pizza.objects.get(pk=request.POST['id'])
+			p.delivered = True
+			p.save()
+			return HttpResponse( json.dumps({'victory': True}), content_type='application/json' )
+
+@login_required
 def driver_dashboard(request):
 	pizzas_available = available_pizzas_as_dict(request.user.id)
 	pizzas_delivered = pizza_to_dict(request.user.id, delivered=True)  # TODO: change this one to match the other two?
@@ -75,6 +84,7 @@ def to_deliver_pizzas_as_dict(user_id):
 			if i.customer.user.first_name and i.customer.user.last_name:
 				full_or_user = '%s %s' % (i.customer.user.first_name, i.customer.user.last_name)		
 		pizzas.append({
+			'id': i.id,
 			'customer_fullname_or_username': full_or_user,
 			'topping': i.get_topping_display(),
 			'price': '$%.2f' % (i.price),

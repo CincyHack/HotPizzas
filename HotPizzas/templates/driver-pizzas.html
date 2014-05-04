@@ -21,7 +21,41 @@
         start_locating();
       }
       setInterval(update_pizzas, 50);
-      momentize();
+      update_pizzas();
+
+
+      /* -- setup csrf for posting -- */
+
+      function getCookie(name) {
+          var cookieValue = null;
+          if (document.cookie && document.cookie != '') {
+              var cookies = document.cookie.split(';');
+              for (var i = 0; i < cookies.length; i++) {
+                  var cookie = jQuery.trim(cookies[i]);
+                  // Does this cookie string begin with the name we want?
+                  if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                      cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                      break;
+                  }
+              }
+          }
+          return cookieValue;
+      }
+      var csrftoken = getCookie('csrftoken');
+
+      function csrfSafeMethod(method) {
+          // these HTTP methods do not require CSRF protection
+          return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+      }
+      $.ajaxSetup({
+          crossDomain: false, // obviates need for sameOrigin test
+          beforeSend: function(xhr, settings) {
+              if (!csrfSafeMethod(settings.type)) {
+                  xhr.setRequestHeader("X-CSRFToken", csrftoken);
+              }
+          }
+      });
+
     });
 
 
@@ -48,8 +82,22 @@
       $.get('/driver/', function(data){
         if (data != $('#pizzas').html()) {
           $('#pizzas').html(data);
+          momentize();
+          add_handlers();
         }        
       })
+    }
+
+    function add_handlers() {
+
+      $('.deliver-btn').click(function(){ 
+        var pid = $(this).data('pizzaid');
+        data = { 'id': pid };
+        $.post('/deliver-pizza/', data, function(data){
+          update_pizzas();
+        });        
+      });
+
     }
 
 
