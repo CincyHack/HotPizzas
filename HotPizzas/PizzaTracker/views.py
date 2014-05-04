@@ -22,9 +22,10 @@ def anonymous_pizza_browser(request):
 
 @login_required
 def driver_dashboard(request):
-	pizzas_available = pizza_to_dict(request.user.id, delivered=False, customer=False)
-	pizzas_delivered = pizza_to_dict(request.user.id, delivered=True)
-	pizzas_to_deliver = pizza_to_dict(request.user.id, customer=True, delivered=False)
+	pizzas_available = available_pizzas_as_dict(request.user.id)
+	pizzas_delivered = pizza_to_dict(request.user.id, delivered=True)  # TODO: change this one to match the other two?
+	pizzas_to_deliver = to_deliver_pizzas_as_dict(request.user.id)
+
 	ctx = {'pizzas_available': pizzas_available, 'pizzas_delivered': pizzas_delivered, 'pizzas_to_deliver': pizzas_to_deliver }
 	
 	return render(request, 'driver-pizzas.html', ctx)
@@ -53,6 +54,34 @@ def delivered_pizzas(request):
 def to_deliver_pizzas(request):
 	pizzas = pizza_to_dict(request.user.id, customer=True, delivered=False)
 	return HttpResponse(str(pizzas))
+
+def available_pizzas_as_dict(user_id):
+	pizzas = []
+	for i in Pizza.objects.select_related().filter(delivered=False).filter(driver__user_id=user_id).filter(customer=None).order_by('-cook_time'):
+		pizzas.append({
+			'cook_time': '%s -0400' % (i.cook_time), 
+			'price': '$%.2f' % (i.price), 
+			'topping': i.get_topping_display() 
+		})
+	return pizzas
+
+def to_deliver_pizzas_as_dict(user_id):
+	pizzas = []
+	for i in Pizza.objects.select_related().filter(delivered=False).filter(driver__user_id=user_id).exclude(customer=None).order_by('-request_time'):
+		full_or_user = i.customer.user.get_username()
+		if i.customer:
+			if i.customer.user.first_name and i.customer.user.last_name:
+				full_or_user = '%s %s' % (i.customer.user.first_name, i.customer.user.last_name)		
+		pizzas.append({
+			'customer_fullname_or_username': full_or_user,
+			'topping': i.get_topping_display(),
+			'price': '$%.2f' % (i.price),
+			'request_time': '%s -0400' % (i.request_time),
+			'customer_latitude': i.customer.latitude,
+			'customer_longitude': i.customer.longitude,
+			'customer_phone': i.customer.phone_number
+		})
+	return pizzas
 
 def pizza_to_dict(user_id, customer=True, delivered=False):
 	pizzas = list()
