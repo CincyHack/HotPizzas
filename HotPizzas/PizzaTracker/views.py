@@ -60,7 +60,7 @@ def pizza_to_dict(user_id, customer=True, delivered=False):
 	for pizza in Pizza.objects.select_related().filter(delivered=delivered).filter(driver__user_id=user_id):
 		formatted_pizza = dict()
 		formatted_pizza["cook_time"] = str(pizza.cook_time)
-		formatted_pizza["price"] = str(pizza.price)
+		formatted_pizza["price"] = '$%.2f' % (pizza.price)
 		formatted_pizza["topping"] = pizza.get_topping_display()
 		if pizza.request_time:
 			formatted_pizza["request_time"] = str(pizza.request_time)
