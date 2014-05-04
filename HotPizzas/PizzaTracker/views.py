@@ -58,7 +58,7 @@ def update_pizza(request):
 				pizza.save()
 				return HttpResponse(json.dumps({"was_bought": True}), content_type="application/json")
 			else:
-				return HttpResponse(jsom.dumps("Invalid params 1"), content_type="application/json")
+				return HttpResponse(json.dumps("Invalid params 1"), content_type="application/json")
 	
 	return HttpResponse(json.dumps("sorry"), content_type="application/json")
 

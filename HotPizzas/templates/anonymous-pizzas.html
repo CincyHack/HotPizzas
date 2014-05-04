@@ -238,12 +238,12 @@ Server.prototype = {
     } else {
       request = $.ajax({
         type: 'post',
-        url: this._url + '/pizzas/closest',
+        url: this._url + '/pizzas/closest/',
         dataType: 'json',
         async: true,
         data: {
           longitude: gPosition.coords.longitude,
-          lattitude: gPosition.coords.latitude
+          latitude: gPosition.coords.latitude
         }
       });
     }
@@ -312,15 +312,16 @@ Pizza.prototype = {
     var self = this;
     return $.ajax({
       type: 'post',
-      url: this._url + '/pizzas/update',
+      url: this._server._url + '/pizza/update/',
       dataType: 'json',
       async: true,
       data: {
         pizza_id: this._info.pizza_id,
         longitude: gPosition.coords.longitude,
         latitude: gPosition.coords.latitude,
-        name: $('#customer-name').val(),
-        phone: $('#customer-tel').val()
+        first_name: $('#customer-name').val(),
+        last_name: '(anon)',
+        phone_number: $('#customer-tel').val()
       }
     }).then(function(data) {
       self._bought = true;
@@ -582,7 +583,7 @@ $(function() {
       showPrompt('#prompt-error');
     }).always(function() {
       $('#prompt-find-pizzas').slideUp();
-      setTimeout(updatePosition, 10000);
+      setTimeout(updatePosition, 15000);
     });
   }
   geolocation.watchPosition(function(pos) {
