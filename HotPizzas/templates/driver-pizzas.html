@@ -4,7 +4,7 @@
   {% for p in pizzas_to_deliver %}
     <p>
       {{ p.topping }}
-      {{ p.customer_username }}
+      {{ p.price }}
       {{ p.request_time }}
       {{ p.customer_latitude }}
       {{ p.customer_longitude }}
@@ -16,6 +16,7 @@
   {% for p in pizzas_available %}
     <p>
       {{ p.topping }}
+      {{ p.price }}
       {{ p.cook_time }}
     </p>
   {% endfor %}
