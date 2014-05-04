@@ -10,7 +10,6 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>HotPizzas.us</title>
-
   <style>
 body > * {
   max-width: 800px;
@@ -78,7 +77,7 @@ body > * {
     </div>
 
     <form id="pizza-confirm" role="form"
-          style="display: none">
+          style="display: none"> {% csrf_token %}
       <div class="form-group">
         <label class="sr-only"
                for="customer-name">Name</label>
