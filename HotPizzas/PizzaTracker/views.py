@@ -9,6 +9,7 @@ import random
 import string
 from datetime import datetime
 from django.contrib.auth import authenticate
+from django.db.models import Q
 
 def garbage_letters():
 	chars=string.ascii_uppercase + string.digits
@@ -73,7 +74,7 @@ def anonymous_pizza_browser(request):
 	if request.is_ajax() and request.method == 'POST':
 		form = LocationForm(request.POST)
 		if form.is_valid():
-			unclaimed_pizzas = Pizza.objects.select_related().filter(customer__isnull=True)
+			unclaimed_pizzas = Pizza.objects.select_related().filter(Q(customer__isnull=True) | Q(customer__user__id=request.user.id))
 			close_pizzas = list()
 			for pizza in unclaimed_pizzas:
 				temp_pizza = dict()
