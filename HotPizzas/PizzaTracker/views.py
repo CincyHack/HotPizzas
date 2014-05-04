@@ -18,6 +18,7 @@ def anonymous_pizza_browser(request):
 			close_pizzas = list()
 			for pizza in unclaimed_pizzas:
 				temp_pizza = dict()
+				temp_pizza["pizza_id"] = pizza.id
 				temp_pizza["cook_time"] = str(pizza.cook_time)
 				temp_pizza["price"] =  str(pizza.price)
 				temp_pizza["topping"] = pizza.get_topping_display()
