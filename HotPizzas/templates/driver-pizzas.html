@@ -1,32 +1,195 @@
-<div>
-  
-  <p><b>to deliver</b></p>
-  {% for p in pizzas_to_deliver %}
-    <p>
-      {{ p.topping }}
-      {{ p.price }}
-      {{ p.request_time }}
-      {{ p.customer_latitude }}
-      {{ p.customer_longitude }}
-      {{ p.customer_phone }}
-    </p>
-  {% endfor %}
+{% extends "base.html" %}
 
-  <p><b>available</b></p>
-  {% for p in pizzas_available %}
-    <p>
-      {{ p.topping }}
-      {{ p.price }}
-      {{ p.cook_time }}
-    </p>
-  {% endfor %}
+{% block head_end %}
 
-  <p><b>delivered</b></p>
-  {% for p in pizzas_delivered %}
-    <p>
-      {{ p.customer_username }}
-      {{ p.topping }}
-    </p>
-  {% endfor %}
+  <style type="text/css">
 
-</div>
+    h1, h2, h3 {
+      text-align: center;
+    }
+
+    .temp {
+      border: 2px solid red;
+    }
+
+  </style>
+
+  <script type="text/javascript">
+
+    var TESTING = true;
+
+    $(function(){  
+      if ("geolocation" in navigator) {
+        start_locating();
+      }
+      update_pizzas();
+    });
+
+
+    /* -- pizzas ajax -- */
+
+    // TODO: add template form name, post page url, test
+    function post_pizza() {
+      $.post('TODO', $('#someform').serialize(), function(data){
+        console.log('post_pizza:', data);
+        update_pizzas();
+      });
+    }
+
+    function update_pizzas() {
+      var ajax_url = (TESTING ? '/puwer/latest' : 'TODO');
+      $.get(ajax_url, function(data){
+        var r = $.parseJSON(data.javascript);
+        $('#pizzas').html(r.markup);
+      });
+    }
+
+
+    /* -- geolocation -- */
+
+    var geo_success = function(position) {
+    //   var ts = get_timestamp();
+      var ts = moment().format('h:mm:ss a');
+      var lat = position.coords.latitude;
+      var lon = position.coords.longitude;
+      var acc = position.coords.accuracy;
+
+      $('#my-location').html( lat + ', <br>  ' + lon + '<br>  ' + acc );
+      $('#my-location-updated').html( ts );
+
+    };
+    var geo_error = function(error) {
+    //   console.log(error);
+    };
+    var geo_opts = { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 };
+    function start_locating() {
+      var watchID = navigator.geolocation.watchPosition(geo_success, geo_error, geo_opts);
+    }
+
+    // function get_timestamp() {
+    //   return Math.round( new Date().getTime() / 1000 );
+    // }
+
+  </script>
+
+{% endblock %}
+
+{% block main %}
+
+  <div class="container" style="margin-bottom: 30px;">
+    <div class="row">
+      <div class="col-xs-12"> 
+        <div class="page-header text-center">
+          <h1>Hot Pizzas</h1>
+          <p class="lead"><em>Driver Mode</em></p>
+        </div>
+<!--         <p class="text-center"><em>Welcome back, Foo Bar</em></p>
+         -->        
+<!--         <div class="alert alert-success alert-dismissable">
+          <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+          <strong>Congrats!</strong> A pizza has been sold.
+        </div>
+         -->        
+        <pre>
+My Location: 
+  <span id="my-location"></span>
+Last Updated: 
+  <span id="my-location-updated"></span>
+</pre>
+
+        <hr>
+
+<!--         <a href="" class="btn btn-primary btn-lg btn-block">Add a pizza</a>
+        <p>post price, topping</p>        
+        <hr>
+         -->        
+
+        <h2>My Pizzas</h2>
+
+        <div id="pizzas" class="temp">
+          foo
+        </div>
+
+        
+        <h3><small><span class="glyphicon glyphicon-time"></span></small> En Route</h3>        
+
+        <p><b>to deliver</b></p>
+        {% for p in pizzas_to_deliver %}
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h3 class="panel-title">{{ p.topping }} for ????? @ ${{ p.price }}</h3>
+            </div>
+            <div class="panel-body">
+              <div class="row">
+                <div class="col-xs-12">
+                  <p>Requested: {{ p.request_time }}</p>
+                  <hr>
+                  <a href="comgooglemaps://?daddr={{ p.customer_latitude }},{{ p.customer_longitude }}&amp;directionsmode=traffic" class="btn btn-primary btn-block">Directions</a>
+                  <a href="tel:{{ p.customer_phone }}" class="btn btn-success btn-block">Call</a>  
+                </div>      
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+
+
+        
+        <h3><small><span class="glyphicon glyphicon-cutlery"></span></small> Available</h3>        
+        <ul class="list-group">
+          <li class="list-group-item list-group-item-success">
+            <span class="badge">0m</span>
+            Pepperoni
+          </li>
+          <li class="list-group-item list-group-item-success">
+            <span class="badge">4m</span>
+            Supreme
+          </li>
+          <li class="list-group-item list-group-item-warning">
+            <span class="badge">20m</span>
+            Cheese
+          </li>
+          <li class="list-group-item list-group-item-danger">
+            <span class="badge">65m</span>
+            Pepperoni
+          </li>
+        </ul>
+        
+        <h3><small><span class="glyphicon glyphicon-check"></span></small> Delivered</h3>
+        <ul class="list-group">
+          <li class="list-group-item list-group-item-success">
+            <strong>David Felix</strong> <small>Cheese</small>
+          </li>
+        </ul>
+        
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+
+
+  <div>
+    
+    <p><b>available</b></p>
+    {% for p in pizzas_available %}
+      <p>
+        {{ p.topping }}
+        {{ p.price }}
+        {{ p.cook_time }}
+      </p>
+    {% endfor %}
+
+    <p><b>delivered</b></p>
+    {% for p in pizzas_delivered %}
+      <p>
+        {{ p.customer_username }}
+        {{ p.topping }}
+      </p>
+    {% endfor %}
+
+  </div>
+
+{% endblock %}
