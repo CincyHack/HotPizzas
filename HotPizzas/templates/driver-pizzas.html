@@ -16,8 +16,6 @@
 
   <script type="text/javascript">
 
-    var snd = new Audio("https://s3.amazonaws.com/buukkittt/mario.mp3");
-
     $(function(){  
       if ("geolocation" in navigator) {
         start_locating();
@@ -89,7 +87,6 @@
         data = { 'id': pid };
         $.post('/deliver-pizza/', data, function(data){
           update_pizzas();
-          snd.play();
         });        
       });
 
