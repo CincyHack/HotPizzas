@@ -63,7 +63,7 @@
 
     function momentize() {
       $('.momentize').each(function(idx){ 
-        $(this).html( moment($(this).data('timestamp')).fromNow() );
+        $(this).html( moment($(this).data('timestamp')).add('hours', -4).fromNow() );
       });
     }
 
