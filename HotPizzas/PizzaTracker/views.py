@@ -6,17 +6,17 @@ from PizzaTracker.models import *
 @login_required
 def test(request):
 	pizzas_available = list()
-	for pizza in Pizza.objects.select_related().filter(delivered=False).filter(driver=request.user.id):
+	for pizza in Pizza.objects.select_related().filter(delivered=False).filter(driver__user_id=request.user.id):
 		formatted_pizza = pizza_to_dict(pizza, customer=False)
 		pizzas_available.append(formatted_pizza)
 	
 	pizzas_delivered = list()
-	for pizza in Pizza.objects.select_related().filter(delivered=True).filter(driver=request.user.id):
+	for pizza in Pizza.objects.select_related().filter(delivered=True).filter(driver__user_id=request.user.id):
 		formatted_pizza = pizza_to_dict(pizza)
 		pizzas_delivered.append(formatted_pizza)
 		
 	pizzas_to_deliver = list()
-	for pizza in Pizza.objects.select_related().filter(delivered=False).filter(driver=request.user.id):
+	for pizza in Pizza.objects.select_related().filter(delivered=False).filter(driver__user_id=request.user.id):
 		formatted_pizza = pizza_to_dict(pizza, customer=False)
 		pizzas_to_deliver.append(formatted_pizza)
 	
@@ -31,7 +31,7 @@ def home(request):
 @login_required
 def available_pizzas(request):
 	pizzas = list()
-	for pizza in Pizza.objects.select_related().filter(delivered=False).filter(driver=request.user.id):
+	for pizza in Pizza.objects.select_related().filter(delivered=False).filter(driver__user_id=request.user.id):
 		formatted_pizza = pizza_to_dict(pizza, customer=False)
 		pizzas.append(formatted_pizza)
 
@@ -40,7 +40,7 @@ def available_pizzas(request):
 @login_required
 def delivered_pizzas(request):
 	pizzas = list()
-	for pizza in Pizza.objects.select_related().filter(delivered=True).filter(driver=request.user.id):
+	for pizza in Pizza.objects.select_related().filter(delivered=True).filter(driver__user_id=request.user.id):
 		formatted_pizza = pizza_to_dict(pizza)
 		pizzas.append(formatted_pizza)
 		
@@ -49,7 +49,7 @@ def delivered_pizzas(request):
 @login_required
 def to_deliver_pizzas(request):
 	pizzas = list()
-	for pizza in Pizza.objects.select_related().filter(delivered=False).filter(driver=request.user.id):
+	for pizza in Pizza.objects.select_related().filter(delivered=False).filter(driver__user_id=request.user.id):
 		formatted_pizza = pizza_to_dict(pizza, customer=False)
 		pizzas.append(formatted_pizza)
 		
@@ -60,7 +60,7 @@ def pizza_to_dict(pizza, customer=True):
 	formatted_pizza["cook_time"] = str(pizza.cook_time)
 	formatted_pizza["price"] = str(pizza.price)
 	formatted_pizza["topping"] = pizza.topping
-	if customer and pizza.customer:
+	if customer and pizza.customer != None:
 		formatted_pizza["customer_username"] = pizza.customer.username
 		formatted_pizza["customer_phone"] = pizza.customer.phone
 	elif customer:
