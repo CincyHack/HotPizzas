@@ -18,7 +18,7 @@ def anonymous_pizza_browser(request):
 	else:
 		form = LocationForm()
 		
-	return render(request, 'anon-browser.html', {'form': form})
+	return render(request, 'anonymous-pizzas.html', {'form': form})
 
 @login_required
 def driver_dashboard(request):
