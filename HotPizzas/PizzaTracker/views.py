@@ -9,7 +9,7 @@ def customer_dashboard(request):
 	return render(request, 'customer-pizzas.html', {})
 	
 def anonymous_pizza_browser(request):
-	if request.method == POST:
+	if request.method == 'POST':
 		form = LocationForm(request.POST)
 		if form.is_valid():
 			close_pizzas = Pizza.objects.select_related().filter(customer__isnull=true)
