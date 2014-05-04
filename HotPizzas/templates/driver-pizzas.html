@@ -160,11 +160,16 @@ Last Updated:
         
         <h3><small><span class="glyphicon glyphicon-check"></span></small> Delivered</h3>
         <ul class="list-group">
-          <li class="list-group-item list-group-item-success">
-            <strong>David Felix</strong> <small>Cheese</small>
-          </li>
-        </ul>
-        
+          {% for p in pizzas_delivered %}
+            <li class="list-group-item list-group-item-success">
+              {% if p.customer_fullname %}
+                <strong>{{ p.customer_fullname }}</strong> <small>{{ p.topping }}</small>
+              {% elif p.customer_username %}
+                <strong>{{ p.customer_username }}</strong> <small>{{ p.topping }}</small>
+              {% endif %}
+            </li>
+          {% endfor %}
+        </ul>        
       </div>
     </div>
   </div>
@@ -183,14 +188,6 @@ Last Updated:
         {{ p.topping }}
         {{ p.price }}
         {{ p.cook_time }}
-      </p>
-    {% endfor %}
-
-    <p><b>delivered</b></p>
-    {% for p in pizzas_delivered %}
-      <p>
-        {{ p.customer_username }}
-        {{ p.topping }}
       </p>
     {% endfor %}
 
