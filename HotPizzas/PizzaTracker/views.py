@@ -54,7 +54,7 @@ def update_pizza(request):
 				)
 				customer.save()
 				authenticate(username=username, password=password)
-				pizza = Pizza.object.get(id=request.POST["pizza_id"])
+				pizza = Pizza.objects.get(id=request.POST["pizza_id"])
 				pizza.customer = customer
 				pizza.save()
 				return HttpResponse(json.dumps({"was_bought": True}), content_type="application/json")
