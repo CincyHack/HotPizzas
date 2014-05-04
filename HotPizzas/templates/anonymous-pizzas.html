@@ -190,12 +190,15 @@ if (TESTING) {
   ];
 }
 
+// Current geolocation position
+var gPosition;
+
 function Server(url) {
   this._url = url;
 }
 
 Server.prototype = {
-  // Find pizzas near (long, lat) and return a deferred array of pizza ids
+  // Find pizzas near gPosition and return a deferred array of pizza ids
   findPizzas: function(long, lat) {
     var request;
     if (TESTING) {
@@ -207,8 +210,8 @@ Server.prototype = {
         dataType: 'json',
         async: true,
         data: {
-          long: long,
-          lat: lat
+          long: gPosition.coords.longitude,
+          lat: gPosition.coords.latitude
         }
       });
     }
@@ -272,9 +275,21 @@ Pizza.prototype = {
       }
       return $.Deferred().resolve();
     }
-    // TODO: actually buy pizza
-    return $.Deferred().reject();
+    return $.ajax({
+      type: 'post',
+      url: this._url + '/pizzas/update',
+      dataType: 'json',
+      async: true,
+      data: {
+        pizza_id: this._info.pizza_id,
+        longitude: gPosition.coords.longitude,
+        latitude: gPosition.coords.latitude,
+        name: $('#customer-name').val(),
+        phone: $('#customer-tel').val()
+      }
+    });
   },
+
   // Returns number < 0 or > 0 depending on if this pizza should be ranked higher or lower than other pizza, respectively
   compare: function(other) {
     var bought = this.bought();
@@ -490,22 +505,21 @@ $('#pizza-confirm').submit(function(e) {
 });
 
 $(function() {
-  var server = new Server('http://myserver');
+  var server = new Server('http://hotpizzas.us');
   var geolocation = navigator.geolocation;
   if (!geolocation) {
     // TODO: geolocation IS NOT available
     return;
   }
-  var position;
   $('#prompt-find-location').slideDown();
   function updatePosition() {
     $('#prompt-find-location').slideUp();
     $('#prompt-find-pizzas').slideDown();
-    server.findPizzas(
-      position.coords.longitude,
-      position.coords.latitude
-    ).then(function(ids) {
+    server.findPizzas()
+      .then(function(ids) {
       return refreshPizzas(server, ids);
+    }).fail(function() {
+      showPrompt('#prompt-error');
     }).always(function() {
       $('#prompt-find-pizzas').slideUp();
       setTimeout(updatePosition, 10000);
@@ -513,14 +527,15 @@ $(function() {
   }
   geolocation.watchPosition(function(pos) {
     $('#prompt-find-pizzas').slideUp();
-    if (!position) {
-      position = pos;
+    if (!gPosition) {
+      gPosition = pos;
       updatePosition();
     } else {
-      position = pos;
+      gPosition = pos;
     }
   }, function() {
     $('#prompt-find-pizzas').slideUp();
+    showPrompt('#prompt-error');
   }, {
     enableHighAccuracy: true,
     timeout: 5000,
