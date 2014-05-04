@@ -34,7 +34,7 @@ def to_deliver_pizzas(request):
 def pizza_to_dict(user_id, customer=True, delivered=False):
 	pizzas = list()
 	
-	for pizza in for pizza in Pizza.objects.select_related().filter(delivered=delivered).filter(driver__user_id=user_id):
+	for pizza in Pizza.objects.select_related().filter(delivered=delivered).filter(driver__user_id=user_id):
 		formatted_pizza = dict()
 		formatted_pizza["cook_time"] = str(pizza.cook_time)
 		formatted_pizza["price"] = str(pizza.price)
