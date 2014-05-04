@@ -12,10 +12,12 @@ class LocationForm(forms.Form):
 class UserForm(forms.ModelForm):
 	username = forms.CharField(help_text="Please enter a username.")
 	password = forms.CharField(widget=forms.PasswordInput(), help_text="Please enter a password.")
+	first_name = forms.CharField()
+	last_name = forms.CharField()
 
 	class Meta:
 		model = User
-		fields = ('username', 'password')
+		fields = ('username', 'password', 'first_name', 'last_name')
 		
 class CustomerForm(forms.ModelForm):
 	phone_number = forms.RegexField(
