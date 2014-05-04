@@ -20,6 +20,7 @@ def update_pizza(request):
 			and request.POST.get("longitude")\
 			and request.POST.get("latitude"):
 				#FIXME: Make this the user's pizza
+				pass
 	else:
 		if request.is_ajax() and request.method == 'POST':
 			if request.POST.get("first_name")\
