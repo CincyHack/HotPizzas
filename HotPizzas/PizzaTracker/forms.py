@@ -3,6 +3,12 @@ from django.contrib.auth.models import User
 from PizzaTracker.models import *
 from datetime import datetime
 
+
+class LocationForm(forms.Form):
+	latitude = forms.DecimalField(widget=forms.HiddenInput(), max_digits=20, decimal_places=17)
+	longitude = forms.DecimalField(widget=forms.HiddenInput(), max_digits=20, decimal_places=17)
+
+
 class UserForm(forms.ModelForm):
 	username = forms.CharField(help_text="Please enter a username.")
 	email = forms.EmailField(help_text="Please enter your email.")
