@@ -4,6 +4,10 @@ from django.contrib.auth.decorators import login_required
 from PizzaTracker.models import *
 
 @login_required
+def customer_dashboard(request):
+	return HttpResponse("I'm not done")
+
+@login_required
 def driver_dashboard(request):
 	pizzas_available = pizza_to_dict(request.user.id, delivered=False, customer=False)
 	pizzas_delivered = pizza_to_dict(request.user.id, delivered=True)
@@ -13,7 +17,13 @@ def driver_dashboard(request):
 	return render(request, 'driver-pizzas.html', ctx)
 
 def home(request):
-	return HttpResponse('Hello World')
+	if request.user.is_authenticated():
+		if len(list(Driver.objects.filter(user=request.user.id))) != 0:
+			HttpResponseRedirect('/driver/')
+		else:
+			HttpResponseRedirect('/customer/')
+	else:
+		return HttpResponse("Hype page goes here")
 	
 
 @login_required
