@@ -27,6 +27,8 @@ def anonymous_pizza_browser(request):
 				
 			#TODO: sort the pizza by location, send distance rather than lat/long
 			return HttpResponse(json.dumps(close_pizzas), content_type="application/json")
+		else:
+			return HttpResponse(json.dumps("sorry"), content_type="application/json")
 	else:
 		form = LocationForm()
 		
