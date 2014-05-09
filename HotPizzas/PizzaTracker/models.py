@@ -1,8 +1,8 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, AbstractBaseUser
 
 
-class Customer(models.Model):
+class Customer(AbstractBaseUser):
 	user = models.OneToOneField(User)
 	phone_number = models.CharField(max_length=15)
 	latitude = models.DecimalField(
@@ -19,7 +19,7 @@ class Customer(models.Model):
 		return str(self.user)
 	
 
-class Driver(models.Model):
+class Driver(AbstractBaseUser):
 	user = models.OneToOneField(User)
 	latitude = models.DecimalField(
 		max_digits=20,
