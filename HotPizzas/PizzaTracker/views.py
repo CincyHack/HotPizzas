@@ -5,15 +5,11 @@ from django.template.loader import render_to_string
 from PizzaTracker.models import *
 from PizzaTracker.forms import *
 import json
-import random
 import string
 from datetime import datetime
 from django.contrib.auth import authenticate
 from django.db.models import Q
 
-def garbage_letters():
-	chars=string.ascii_uppercase + string.digits
-	return ''.join(random.choice(chars) for _ in range(15))
 
 def update_pizza(request):
 	if request.user.is_authenticated():
@@ -33,16 +29,16 @@ def update_pizza(request):
 			and request.POST.get("phone_number")\
 			and request.POST.get("pizza_id")\
 			and request.POST.get("longitude")\
-			and request.POST.get("latitude"):
-				username = garbage_letters()
-				password = garbage_letters()
+			and request.POST.get("latitude")\
+			and request.POST.get("username")\
+			and request.POST.get("password"):
 				user_form = UserForm(
 					{
 						'first_name': request.POST.get("first_name"),
 						'last_name': request.POST.get("last_name"),
 						'phone_number': request.POST.get("phone_number"),
-						'username': username,
-						'password': password
+						'username': request.POST.get("username"),
+						'password': request.POST.get("password")
 					}
 				)
 				user = user_form.save()
