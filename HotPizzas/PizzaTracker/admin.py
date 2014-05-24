@@ -1,5 +1,5 @@
 from django.contrib import admin
-from PizzaTracker.models import *
+from .models import Pizza, Driver, Customer
 
 admin.site.register(Pizza)
 admin.site.register(Driver)
