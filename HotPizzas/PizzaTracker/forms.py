@@ -1,7 +1,7 @@
+from datetime import datetime
 from django import forms
 from django.contrib.auth.models import User
-from PizzaTracker.models import *
-from datetime import datetime
+from .models import Pizza, Customer, Driver
 
 
 class LocationForm(forms.Form):
