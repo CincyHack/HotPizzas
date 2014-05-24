@@ -1,14 +1,14 @@
-from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseRedirect
-from django.contrib.auth.decorators import login_required
-from django.template.loader import render_to_string
-from PizzaTracker.models import *
-from PizzaTracker.forms import *
 import json
 import string
 from datetime import datetime
-from django.contrib.auth import authenticate
 from django.db.models import Q
+from django.shortcuts import render
+from django.template.loader import render_to_string
+from django.http import HttpResponse, HttpResponseRedirect
+from django.contrib.auth import authenticate
+from django.contrib.auth.decorators import login_required
+from .models import Customer, Driver, Pizza
+from .forms import UserForm, LocationForm
 
 
 def update_pizza(request):
