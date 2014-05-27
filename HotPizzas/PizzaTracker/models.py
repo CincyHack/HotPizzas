@@ -34,7 +34,9 @@ class Driver(AbstractBaseUser):
 	def __str__(self):
 		return str(self.user)
 	
-
+class PizzaManager(models.Manager):
+	use_for_related_fields = True
+	
 class Pizza(models.Model):
 	CHEESE = "C"
 	PEPPERONI = "P"
@@ -51,6 +53,8 @@ class Pizza(models.Model):
 	driver = models.ForeignKey(Driver)
 	delivered = models.BooleanField(default=False)
 	request_time = models.DateTimeField(null=True, blank=True)
+	
+	objects = PizzaManager()
 	
 	def __str__(self):
 		return str(self.driver) + " " + str(self.topping) + str(self.id)
