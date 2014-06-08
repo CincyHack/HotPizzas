@@ -1,5 +1,5 @@
-from .models.base import Customer, Driver
-from .models.pizza import PizzaManager, Pizza
+from .base import Customer, Driver
+from .pizza import PizzaManager, Pizza
 
 __all__ = [
 	'Customer',

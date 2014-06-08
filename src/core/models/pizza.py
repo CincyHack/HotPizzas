@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-from .models import Driver, Customer
+from .base import Driver, Customer
 
 class PizzaManager(models.Manager):
 	use_for_related_fields = True

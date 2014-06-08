@@ -1,5 +1,5 @@
 #FIXME: remove import *
-from views.base import *
+from .base import *
 
 __all__ = [
 	update_pizza,
