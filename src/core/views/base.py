@@ -7,8 +7,8 @@ from django.template.loader import render_to_string
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth import authenticate
 from django.contrib.auth.decorators import login_required
-from .models import Customer, Driver, Pizza
-from .forms import UserForm, LocationForm
+from ..models import Customer, Driver, Pizza
+from ..forms import UserForm, LocationForm
 
 
 def update_pizza(request):
