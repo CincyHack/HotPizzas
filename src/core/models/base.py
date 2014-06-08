@@ -3,6 +3,10 @@ from django.contrib.auth.models import User, AbstractBaseUser
 
 
 class Customer(AbstractBaseUser):
+	
+	class Meta:
+		app_label = "core"
+
 	user = models.OneToOneField(User)
 	phone_number = models.CharField(max_length=15)
 	latitude = models.DecimalField(
@@ -20,6 +24,10 @@ class Customer(AbstractBaseUser):
 	
 
 class Driver(AbstractBaseUser):
+
+	class Meta:
+		app_label = "core"
+
 	user = models.OneToOneField(User)
 	latitude = models.DecimalField(
 		max_digits=20,

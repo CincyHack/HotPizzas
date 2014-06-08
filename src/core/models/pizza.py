@@ -6,6 +6,10 @@ class PizzaManager(models.Manager):
 	use_for_related_fields = True
 	
 class Pizza(models.Model):
+	
+	class Meta:
+		app_label = "core"
+
 	CHEESE = "C"
 	PEPPERONI = "P"
 	SAUSAGE = "S"
