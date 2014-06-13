@@ -1,6 +1,7 @@
 from django.conf.urls import patterns, include, url
 
 from django.contrib import admin
+from core.views import PizzaListView
 admin.autodiscover()
 
 urlpatterns = patterns('',
@@ -12,7 +13,7 @@ urlpatterns = patterns('',
     url(r'^deliver-pizza/$', 'core.views.deliver_pizza', name='deliver_pizza'),
     url(r'^driver/$', 'core.views.driver_dashboard', name='driver_dashboard'),
     url(r'^customer/$', 'core.views.customer_dashboard', name='customer_dashboard'),
-    url(r'^pizzas/closest/$', 'core.views.anonymous_pizza_browser', name='anonymous_pizza_browser'),
+    url(r'^pizzas/closest/$', PizzaListView.as_view(), name='anonymous_pizza_browser'),
     url(r'^pizza/update/$', 'core.views.update_pizza', name='update_pizza'),
     url(r'^admin/', include(admin.site.urls)),
     #/login/ to sign in to the application

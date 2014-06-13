@@ -1,8 +1,8 @@
 from django.db import models
-from django.contrib.auth.models import User, AbstractBaseUser
+from django.contrib.auth.models import User
 
 
-class Customer(AbstractBaseUser):
+class Customer(models.Model):
 	
 	class Meta:
 		app_label = "core"
@@ -23,7 +23,7 @@ class Customer(AbstractBaseUser):
 		return str(self.user)
 	
 
-class Driver(AbstractBaseUser):
+class Driver(models.Model):
 
 	class Meta:
 		app_label = "core"

@@ -2,6 +2,13 @@ from django.db import models
 from django.contrib.auth.models import User
 from .base import Driver, Customer
 
+class Topping(models.Model):
+
+	class Meta:
+		app_label = "core"
+
+	name = models.CharField(max_length=20)
+
 class PizzaManager(models.Manager):
 	use_for_related_fields = True
 	
@@ -10,17 +17,9 @@ class Pizza(models.Model):
 	class Meta:
 		app_label = "core"
 
-	CHEESE = "C"
-	PEPPERONI = "P"
-	SAUSAGE = "S"
-	TOPPING_CHOICES = (
-		(CHEESE, "Cheese"),
-		(PEPPERONI, "Pepperoni"),
-		(SAUSAGE, "Sausage"),
-	)
 	cook_time = models.DateTimeField()
 	price = models.DecimalField(max_digits=4, decimal_places=2)
-	topping = models.CharField(max_length=1, choices=TOPPING_CHOICES, default=CHEESE)
+	toppings = models.ManyToManyField(Topping)
 	customer = models.ForeignKey(Customer, null=True, blank=True)
 	driver = models.ForeignKey(Driver)
 	delivered = models.BooleanField(default=False)
@@ -29,4 +28,10 @@ class Pizza(models.Model):
 	objects = PizzaManager()
 	
 	def __str__(self):
-		return str(self.driver) + " " + str(self.topping) + str(self.id)
+		string = "{}: A pizza, cooked at {}, being delivered by {}"
+		string = string.format(
+			str(self.id),
+			str(self.cook_time),
+			str(self.driver)
+		)
+		return string 
