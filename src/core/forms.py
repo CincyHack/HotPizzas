@@ -34,10 +34,15 @@ class CustomerForm(forms.ModelForm):
 class PizzaForm(forms.ModelForm):
 	cook_time = forms.DateTimeField(initial=datetime.now())
 	price = forms.DecimalField(max_digits=4, decimal_places=2)
-	topping = forms.ChoiceField(Pizza.TOPPING_CHOICES)
+	#FIXME: implement choices from db select
+	#topping = forms.ChoiceField(Pizza.TOPPING_CHOICES)
 	class Meta:
 		model = Pizza
-		fields = ('cook_time', 'price', 'topping')
+		fields = (
+			'cook_time',
+			'price',
+			#'topping'
+		)
 		
 class DriverForm(forms.ModelForm):
 	latitude = forms.DecimalField(widget=forms.HiddenInput(), max_digits=20, decimal_places=17)
