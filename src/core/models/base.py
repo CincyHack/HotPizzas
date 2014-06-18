@@ -1,6 +1,18 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, User
 
+
+class HotPizzasUserManager(BaseUserManager):
+	class Meta:
+		app_label = "core"
+
+
+class HotPizzasUser(AbstractBaseUser):
+	class Meta:
+		app_label = "core"
+
+	objects = HotPizzasUserManager()
+	
 
 class Customer(models.Model):
 	
