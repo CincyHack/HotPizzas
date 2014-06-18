@@ -11,49 +11,21 @@ class HotPizzasUser(AbstractBaseUser):
 	class Meta:
 		app_label = "core"
 
-	objects = HotPizzasUserManager()
+	email = models.EmailField(
+		verbose_name='email address',
+		max_length=255,
+		unique=True,
+	)
 	phone_number = models.ChaarField(max_length=15)
 	is_active = models.BooleanField(default=True)
 	is_admin = models.BooleanField(default=False)
 	is_customer = models.BooleanField(default=True)
 	is_driver = models.BooleanField(default=False)
 
-class Customer(models.Model):
+	objects = HotPizzasUserManager()
 	
-	class Meta:
-		app_label = "core"
-
-	user = models.OneToOneField(User)
-	phone_number = models.CharField(max_length=15)
-	latitude = models.DecimalField(
-		max_digits=20,
-		decimal_places=17
-	)
-	longitude = models.DecimalField(
-		max_digits=20,
-		decimal_places=17
-	)
-	last_location_time = models.DateTimeField()
+	USERNAME_FIELD = 'email'
 	
 	def __str__(self):
-		return str(self.user)
-	
+		return str(self.username)
 
-class Driver(models.Model):
-
-	class Meta:
-		app_label = "core"
-
-	user = models.OneToOneField(User)
-	latitude = models.DecimalField(
-		max_digits=20,
-		decimal_places=17
-	)
-	longitude = models.DecimalField(
-		max_digits=20,
-		decimal_places=17
-	)
-	last_location_time = models.DateTimeField()
-	
-	def __str__(self):
-		return str(self.user)
