@@ -44,6 +44,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'south',
+    'rest_framework',
     'core'
 )
 
@@ -70,7 +71,7 @@ DATABASES = {
         'NAME': 'hotpizzas',
         'USER': 'hotpizzas',
         'PASSWORD': 'hotpizzas',
-        'HOST': '127.0.0.1',
+        'HOST': 'devdb.clqblfd0mdpm.us-east-1.rds.amazonaws.com',
         'PORT': '5432',
     }
 }

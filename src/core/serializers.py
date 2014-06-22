@@ -1,12 +1,26 @@
 from rest_framework import serializers
-from .models import HotPizzasUser, Pizza
+from .models import Product, ProductConfiguration, Driver, Customer
 
-HotPizzasUserSerializer(serializers.HyperLinkedModelSerializer):
-	class Meta:
-		model = HotPizzasUser
-		fields = ()
 
-PizzaSerializer(serializers.HyperLinkedModelSerializer):
+class CustomerSerializer(serializers.HyperlinkedModelSerializer):
 	class Meta:
-		model = Pizza
-		fields = ()
+		model = Customer
+		fields = ('url')
+
+class DriverSerializer(serializers.HyperlinkedModelSerializer):
+	class Meta:
+		model = Driver
+		fields = ('url')
+
+
+class ProductSerializer(serializers.HyperlinkedModelSerializer):
+	class Meta:
+		model = Product
+		fields = ('url')
+
+
+class ProductConfigurationSerializer(serializers.HyperlinkedModelSerializer):
+	class Meta:
+		model = ProductConfiguration
+		fields = ('url')
+

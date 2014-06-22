@@ -2,12 +2,32 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 
 
-class HotPizzasUserManager(BaseUserManager):
+class Customer(AbstractBaseUser):
+	
 	class Meta:
 		app_label = "core"
 
+	phone_number = models.CharField(max_length=15, primary_key=True)
 
-class HotPizzasUser(AbstractBaseUser):
+	USERNAME_FIELD = 'phone_number'
+
+	def __str__(self):
+		return str(self.phone_number)
+	
+
+class CustomerInformation(models.Model):
+	
+	class Meta:
+		app_label = "core"
+
+	name = models.CharField(max_length=100)
+	customer = models.ForeignKey(Customer)
+
+	def __str__(self):
+		return str(self.name)
+
+
+class Driver(AbstractBaseUser):
 	class Meta:
 		app_label = "core"
 
@@ -16,16 +36,12 @@ class HotPizzasUser(AbstractBaseUser):
 		max_length=255,
 		unique=True,
 	)
-	phone_number = models.ChaarField(max_length=15)
+	phone_number = models.CharField(max_length=15)
 	is_active = models.BooleanField(default=True)
 	is_admin = models.BooleanField(default=False)
-	is_customer = models.BooleanField(default=True)
-	is_driver = models.BooleanField(default=False)
 
-	objects = HotPizzasUserManager()
-	
 	USERNAME_FIELD = 'email'
-	
+
 	def __str__(self):
-		return str(self.username)
+		return str(self.email)
 

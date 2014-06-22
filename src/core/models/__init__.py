@@ -1,9 +1,9 @@
-from .base import HotPizzasUser
-from .pizza import PizzaManager, Pizza, Topping
+from .base import Customer, Driver
+from .product import Product, ProductConfiguration
 
 __all__ = [
-	'HotPizzasUser',
-	'PizzaManager',
-	'Pizza',
-	'Topping',
+	'Customer',
+	'Driver',
+	'Product',
+	'ProductConfiguration',
 ]

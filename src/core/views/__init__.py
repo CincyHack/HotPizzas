@@ -1,5 +1,8 @@
-from .pizzas import PizzaListView
+from .api import ProductViewSet, ProductConfigurationViewSet, DriverViewSet, CustomerViewSet
 
 __all__ = [
-	'PizzaListView',
+	'ProductViewSet',
+	'ProductConfigurationViewSet',
+	'DriverViewSet',
+	'CustomerViewSet'
 ]
