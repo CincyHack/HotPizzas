@@ -8,23 +8,10 @@ class Customer(AbstractBaseUser):
 		app_label = "core"
 
 	phone_number = models.CharField(max_length=15, primary_key=True)
-
-	USERNAME_FIELD = 'phone_number'
-
-	def __str__(self):
-		return str(self.phone_number)
-	
-
-class CustomerInformation(models.Model):
-	
-	class Meta:
-		app_label = "core"
-
 	name = models.CharField(max_length=100)
-	customer = models.ForeignKey(Customer)
 
 	def __str__(self):
-		return str(self.name)
+		return str(self.phone_number) + ": " + str(self.name)
 
 
 class Driver(AbstractBaseUser):
@@ -39,8 +26,6 @@ class Driver(AbstractBaseUser):
 	phone_number = models.CharField(max_length=15)
 	is_active = models.BooleanField(default=True)
 	is_admin = models.BooleanField(default=False)
-
-	USERNAME_FIELD = 'email'
 
 	def __str__(self):
 		return str(self.email)

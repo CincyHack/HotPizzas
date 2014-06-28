@@ -1,13 +1,14 @@
 from django.conf.urls import patterns, include, url
 
 from django.contrib import admin
-from core.views import ProductViewSet, ProductConfigurationViewSet, DriverViewSet, CustomerViewSet
+from core.views import ProductViewSet, ProductTypeViewSet, ProductConfigurationViewSet, DriverViewSet, CustomerViewSet
 from rest_framework.routers import DefaultRouter
 admin.autodiscover()
 
 router = DefaultRouter()
 router.register(r'product', ProductViewSet)
-router.register(r'product_configurations', ProductConfigurationViewSet)
+router.register(r'product_type', ProductTypeViewSet)
+router.register(r'product_configuration', ProductConfigurationViewSet)
 router.register(r'drivers', DriverViewSet)
 router.register(r'customer', CustomerViewSet)
 
