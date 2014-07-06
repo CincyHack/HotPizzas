@@ -3,26 +3,23 @@ from .models import Product, ProductType, ProductConfiguration, Driver, Customer
 
 
 class CustomerSerializer(serializers.HyperlinkedModelSerializer):
-	#products = serializers.HyperlinkedRelatedField(view_name='product-detail', many=True)
 	
 	class Meta:
 		model = Customer
-		#fields = ('url', 'phone_number', 'products')
+		fields = ('url', 'phone_number', 'products')
 
 class DriverSerializer(serializers.HyperlinkedModelSerializer):
-	#products = serializers.HyperlinkedRelatedField(view_name='product-detail', many=True)
 	
 	class Meta:
 		model = Driver
-		#fields = ('url', 'email', 'phone_number', 'products')
+		fields = ('url', 'email', 'phone_number', 'products')
 
 
 class ProductSerializer(serializers.HyperlinkedModelSerializer):
-	#configurations = serializers.HyperlinkedRelatedField(view_name='product_configuration-details', many=True)
-	
+
 	class Meta:
 		model = Product
-		fields = ('url', 'cook_time', 'expiration_time', 'base_price', 'delivered', 'request_time', )#'configurations')
+		fields = ('url', 'cook_time', 'expiration_time', 'base_price', 'delivered', 'request_time', 'customer', 'configurations')
 
 
 class ProductTypeSerializer(serializers.HyperlinkedModelSerializer):
@@ -33,9 +30,8 @@ class ProductTypeSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class ProductConfigurationSerializer(serializers.HyperlinkedModelSerializer):
-	#product_type = serializers.HyperlinkedRelatedField(view_name='product_type-details', lookup_field='name')
 
 	class Meta:
 		model = ProductConfiguration
-		fields = ('url', 'description', )#'product_type')
+		fields = ('url', 'description', 'product_type')
 

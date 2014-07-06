@@ -35,8 +35,8 @@ class Product(models.Model):
 	base_price = models.DecimalField(max_digits=4, decimal_places=2)
 	product_type = models.ForeignKey(ProductType)
 	configurations = models.ManyToManyField(ProductConfiguration)
-	customer = models.ForeignKey(Customer, null=True, blank=True)
-	driver = models.ForeignKey(Driver)
+	customer = models.ForeignKey(Customer, null=True, blank=True, related_name='products')
+	driver = models.ForeignKey(Driver, related_name='products')
 	delivered = models.BooleanField(default=False)
 	request_time = models.DateTimeField(null=True, blank=True)
 	

@@ -9,7 +9,7 @@ router = DefaultRouter()
 router.register(r'product', ProductViewSet)
 router.register(r'product_type', ProductTypeViewSet)
 router.register(r'product_configuration', ProductConfigurationViewSet)
-router.register(r'drivers', DriverViewSet)
+router.register(r'driver', DriverViewSet)
 router.register(r'customer', CustomerViewSet)
 
 urlpatterns = patterns('',
