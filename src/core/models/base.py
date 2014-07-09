@@ -8,10 +8,23 @@ class Customer(AbstractBaseUser):
 		app_label = "core"
 
 	phone_number = models.CharField(max_length=15, primary_key=True)
-	name = models.CharField(max_length=100)
 
 	def __str__(self):
-		return str(self.phone_number) + ": " + str(self.name)
+		return str(self.phone_number)
+
+
+class CustomerInformation(models.Model):
+	
+	class Meta:
+		app_label = "core"
+		
+	name = models.CharField(max_length=100)
+	customer = models.ForeignKey(Customer, related_name='customer_informations')
+	x_location = models.DecimalField(max_digits=10, decimal_places=5)
+	y_location = models.DecimalField(max_digits=10, decimal_places=5)
+
+	def __str__(self):
+		return str(self.name)
 
 
 class Driver(AbstractBaseUser):
