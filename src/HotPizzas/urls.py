@@ -1,7 +1,14 @@
 from django.conf.urls import patterns, include, url
 
 from django.contrib import admin
-from core.views import ProductViewSet, ProductTypeViewSet, ProductConfigurationViewSet, DriverViewSet, CustomerViewSet
+from core.views import (
+    ProductViewSet,
+    ProductTypeViewSet,
+    ProductConfigurationViewSet,
+    DriverViewSet,
+    CustomerViewSet,
+    CustomerInformationViewSet
+)
 from rest_framework.routers import DefaultRouter
 admin.autodiscover()
 
