@@ -1,7 +1,21 @@
 from rest_framework import viewsets
 from rest_framework import mixins
-from ..models import Product, ProductType, ProductConfiguration, Driver, Customer
-from ..serializers import ProductSerializer, ProductTypeSerializer, ProductConfigurationSerializer, DriverSerializer, CustomerSerializer
+from ..models import (
+	Product,
+	ProductType,
+	ProductConfiguration,
+	Driver,
+	Customer,
+	CustomerInformation
+)
+from ..serializers import (
+	ProductSerializer,
+	ProductTypeSerializer,
+	ProductConfigurationSerializer, 
+	DriverSerializer, 
+	CustomerSerializer,
+	CustomerInformationSerializer
+)
 
 
 class ProductViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
@@ -28,3 +42,7 @@ class CustomerViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets
 	queryset = Customer.objects.all()
 	serializer_class = CustomerSerializer
 
+
+class CustomerInformationViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GeneticViewSet):
+	queryset = CustomerInformation.objects.all()
+	serializer_class = CustomerInformationSerializer
