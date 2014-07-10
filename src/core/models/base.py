@@ -1,6 +1,17 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 
+class Location(models.Model):
+	
+	class Meta:
+		app_label = "core"
+		
+	x = models.DecimalField(max_digits=10, decimal_places=5)
+	y = models.DecimalField(max_digits=10, decimal_places=5)
+	
+	def __str__(self):
+		return "(" + str(self.x) ", " + str(self.y) + ")"
+
 
 class Customer(AbstractBaseUser):
 	
@@ -20,8 +31,7 @@ class CustomerInformation(models.Model):
 		
 	name = models.CharField(max_length=100)
 	customer = models.ForeignKey(Customer, related_name='customer_informations')
-	x_location = models.DecimalField(max_digits=10, decimal_places=5)
-	y_location = models.DecimalField(max_digits=10, decimal_places=5)
+	location = models.ForeignKey(Location, related_name='customer')
 
 	def __str__(self):
 		return str(self.name)
