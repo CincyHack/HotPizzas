@@ -1,5 +1,22 @@
 from rest_framework import serializers
-from .models import Product, ProductType, ProductConfiguration, Driver, Customer, CustomerInformation
+from .models import (
+	Product,
+	ProductType,
+	ProductConfiguration,
+	Driver,
+	Customer,
+	CustomerInformation,
+	Location
+)
+
+class LocationSerializer(serializers.HyperlinkedModelSerializer):
+	
+	class Meta:
+		model = Location
+		fields = (
+			'longitude',
+			'latitude'
+		)
 
 
 class CustomerSerializer(serializers.HyperlinkedModelSerializer):
@@ -21,7 +38,8 @@ class CustomerInformationSerializer(serializers.HyperlinkedModelSerializer):
 			'url',
 			'name',
 			'customer',
-			'orders'
+			'orders',
+			'location'
 		)
 		
 
@@ -49,7 +67,8 @@ class ProductSerializer(serializers.HyperlinkedModelSerializer):
 			'delivered',
 			'request_time',
 			'customer',
-			'configurations'
+			'configurations',
+			'location'
 		)
 
 
