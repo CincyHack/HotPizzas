@@ -6,7 +6,8 @@ from ..models import (
 	ProductConfiguration,
 	Driver,
 	Customer,
-	CustomerInformation
+	CustomerInformation,
+	Location
 )
 from ..serializers import (
 	ProductSerializer,
@@ -14,8 +15,13 @@ from ..serializers import (
 	ProductConfigurationSerializer, 
 	DriverSerializer, 
 	CustomerSerializer,
-	CustomerInformationSerializer
+	CustomerInformationSerializer,
+	LocationSerializer
 )
+
+class LocationViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
+	queryset = Product.objects.all()
+	serializer_class = LocationSerializer
 
 
 class ProductViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
