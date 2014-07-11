@@ -6,8 +6,8 @@ class Location(models.Model):
 	class Meta:
 		app_label = "core"
 		
-	x = models.DecimalField(max_digits=10, decimal_places=5)
-	y = models.DecimalField(max_digits=10, decimal_places=5)
+	longitude = models.DecimalField(max_digits=10, decimal_places=5)
+	latitude = models.DecimalField(max_digits=10, decimal_places=5)
 	
 	def __str__(self):
 		return "(" + str(self.x) ", " + str(self.y) + ")"
