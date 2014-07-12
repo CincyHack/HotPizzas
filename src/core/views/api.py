@@ -20,7 +20,7 @@ from ..serializers import (
 )
 
 class LocationViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
-	queryset = Product.objects.all()
+	queryset = Location.objects.all()
 	serializer_class = LocationSerializer
 
 
@@ -49,6 +49,6 @@ class CustomerViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets
 	serializer_class = CustomerSerializer
 
 
-class CustomerInformationViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GeneticViewSet):
+class CustomerInformationViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
 	queryset = CustomerInformation.objects.all()
 	serializer_class = CustomerInformationSerializer

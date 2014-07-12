@@ -8,11 +8,19 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
+        # Adding model 'Location'
+        db.create_table('core_location', (
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('longitude', self.gf('django.db.models.fields.DecimalField')(max_digits=10, decimal_places=5)),
+            ('latitude', self.gf('django.db.models.fields.DecimalField')(max_digits=10, decimal_places=5)),
+        ))
+        db.send_create_signal('core', ['Location'])
+
         # Adding model 'Customer'
         db.create_table('core_customer', (
             ('password', self.gf('django.db.models.fields.CharField')(max_length=128)),
             ('last_login', self.gf('django.db.models.fields.DateTimeField')(default=datetime.datetime.now)),
-            ('phone_number', self.gf('django.db.models.fields.CharField')(max_length=15, primary_key=True)),
+            ('phone_number', self.gf('django.db.models.fields.CharField')(primary_key=True, max_length=15)),
         ))
         db.send_create_signal('core', ['Customer'])
 
@@ -20,7 +28,8 @@ class Migration(SchemaMigration):
         db.create_table('core_customerinformation', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('name', self.gf('django.db.models.fields.CharField')(max_length=100)),
-            ('customer', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['core.Customer'])),
+            ('customer', self.gf('django.db.models.fields.related.ForeignKey')(related_name='customer_informations', to=orm['core.Customer'])),
+            ('location', self.gf('django.db.models.fields.related.ForeignKey')(related_name='customer', to=orm['core.Location'])),
         ))
         db.send_create_signal('core', ['CustomerInformation'])
 
@@ -38,7 +47,7 @@ class Migration(SchemaMigration):
 
         # Adding model 'ProductType'
         db.create_table('core_producttype', (
-            ('name', self.gf('django.db.models.fields.CharField')(max_length=20, primary_key=True)),
+            ('name', self.gf('django.db.models.fields.CharField')(primary_key=True, max_length=20)),
         ))
         db.send_create_signal('core', ['ProductType'])
 
@@ -57,8 +66,9 @@ class Migration(SchemaMigration):
             ('expiration_time', self.gf('django.db.models.fields.DateTimeField')()),
             ('base_price', self.gf('django.db.models.fields.DecimalField')(max_digits=4, decimal_places=2)),
             ('product_type', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['core.ProductType'])),
-            ('customer', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['core.Customer'], blank=True, null=True)),
-            ('driver', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['core.Driver'])),
+            ('customer', self.gf('django.db.models.fields.related.ForeignKey')(related_name='products', to=orm['core.CustomerInformation'], blank=True, null=True)),
+            ('location', self.gf('django.db.models.fields.related.ForeignKey')(related_name='products', to=orm['core.Location'])),
+            ('driver', self.gf('django.db.models.fields.related.ForeignKey')(related_name='products', to=orm['core.Driver'])),
             ('delivered', self.gf('django.db.models.fields.BooleanField')(default=False)),
             ('request_time', self.gf('django.db.models.fields.DateTimeField')(blank=True, null=True)),
         ))
@@ -75,6 +85,9 @@ class Migration(SchemaMigration):
 
 
     def backwards(self, orm):
+        # Deleting model 'Location'
+        db.delete_table('core_location')
+
         # Deleting model 'Customer'
         db.delete_table('core_customer')
 
@@ -102,12 +115,13 @@ class Migration(SchemaMigration):
             'Meta': {'object_name': 'Customer'},
             'last_login': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
             'password': ('django.db.models.fields.CharField', [], {'max_length': '128'}),
-            'phone_number': ('django.db.models.fields.CharField', [], {'max_length': '15', 'primary_key': 'True'})
+            'phone_number': ('django.db.models.fields.CharField', [], {'primary_key': 'True', 'max_length': '15'})
         },
         'core.customerinformation': {
             'Meta': {'object_name': 'CustomerInformation'},
-            'customer': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['core.Customer']"}),
+            'customer': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'customer_informations'", 'to': "orm['core.Customer']"}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'location': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'customer'", 'to': "orm['core.Location']"}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
         },
         'core.driver': {
@@ -120,16 +134,23 @@ class Migration(SchemaMigration):
             'password': ('django.db.models.fields.CharField', [], {'max_length': '128'}),
             'phone_number': ('django.db.models.fields.CharField', [], {'max_length': '15'})
         },
+        'core.location': {
+            'Meta': {'object_name': 'Location'},
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'latitude': ('django.db.models.fields.DecimalField', [], {'max_digits': '10', 'decimal_places': '5'}),
+            'longitude': ('django.db.models.fields.DecimalField', [], {'max_digits': '10', 'decimal_places': '5'})
+        },
         'core.product': {
             'Meta': {'object_name': 'Product'},
             'base_price': ('django.db.models.fields.DecimalField', [], {'max_digits': '4', 'decimal_places': '2'}),
             'configurations': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'to': "orm['core.ProductConfiguration']"}),
             'cook_time': ('django.db.models.fields.DateTimeField', [], {}),
-            'customer': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['core.Customer']", 'blank': 'True', 'null': 'True'}),
+            'customer': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'products'", 'to': "orm['core.CustomerInformation']", 'blank': 'True', 'null': 'True'}),
             'delivered': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'driver': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['core.Driver']"}),
+            'driver': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'products'", 'to': "orm['core.Driver']"}),
             'expiration_time': ('django.db.models.fields.DateTimeField', [], {}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'location': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'products'", 'to': "orm['core.Location']"}),
             'product_type': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['core.ProductType']"}),
             'request_time': ('django.db.models.fields.DateTimeField', [], {'blank': 'True', 'null': 'True'})
         },
@@ -141,7 +162,7 @@ class Migration(SchemaMigration):
         },
         'core.producttype': {
             'Meta': {'object_name': 'ProductType'},
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '20', 'primary_key': 'True'})
+            'name': ('django.db.models.fields.CharField', [], {'primary_key': 'True', 'max_length': '20'})
         }
     }
 

@@ -4,6 +4,7 @@ from .api import (
 	ProductConfigurationViewSet,
 	DriverViewSet,
 	CustomerViewSet,
+	CustomerInformationViewSet,
 	LocationViewSet,
 )
 
@@ -13,5 +14,6 @@ __all__ = [
 	'ProductConfigurationViewSet',
 	'DriverViewSet',
 	'CustomerViewSet',
+	'CustomerInformationViewSet',
 	'LocationViewSet',
 ]
