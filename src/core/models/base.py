@@ -10,7 +10,7 @@ class Location(models.Model):
 	latitude = models.DecimalField(max_digits=10, decimal_places=5)
 	
 	def __str__(self):
-		return "(" + str(self.x) + ", " + str(self.y) + ")"
+		return "(" + str(self.longitude) + ", " + str(self.latitude) + ")"
 
 
 class Customer(AbstractBaseUser):
