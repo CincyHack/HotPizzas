@@ -7,41 +7,48 @@ from ..models import Product
 from ..permissions import IsDriver, IsCustomer
 
 
-class DriverUnsoldProductList(mixins.ListModelMixin, generic.GenericAPIView):
+class DriverFilterMixin:
+	
+	def filter_driver(self):
+		driver = self.request.user
+		return Product.objects.filter(driver__user=driver)
+
+
+class DriverUnsoldProductList(DriverFilterMixin, mixins.ListModelMixin, generic.GenericAPIView):
 	serializer_class = ProuctSerializer
 	
 	def get_queryset(self):
-		driver = self.request.driver
-		return Product.objects.filter(customer__isnull=True, driver=driver)
+		queryset = filter_driver()
+		return queryset.filter(customer__isnull=True)
 
 
-class DriverSoldProductList(mixins.ListModelMixin, generic.GenericAPIView):
+class DriverSoldProductList(DriverFilterMixin, mixins.ListModelMixin, generic.GenericAPIView):
 	serializer_class = ProductSerializer
 	
 	def get_queryset(self):
-		driver = self.request.driver
-		return Product.objects.filter(customer__isnull=False)
+		queryset = filter_driver()
+		return queryset.filter(customer__isnull=False)
 
 	
-class DriverUndeliveredProductList(mixins.ListModelMixin, generic.GenericAPIView):
+class DriverUndeliveredProductList(DriverFilterMixin, mixins.ListModelMixin, generic.GenericAPIView):
 	serializer_class = ProductSerializer
 
 	def get_queryset(self):
-		driver = self.request.driver
-		return Product.objects.filter(delivered=False)
+		queryset = filter_driver()
+		return queryset.filter(delivered=False)
 
 	
-class DriverDeliveredProducList(mixins.ListModelMixin, generic.GenericAPIView):
+class DriverDeliveredProducList(DriverFilterMixin, mixins.ListModelMixin, generic.GenericAPIView):
 	serializer_class = ProductSerializer
 	
 	def get_queryset(self):
-		driver = self.request.driver
-		return Product.objects.filter(delivered=True)
+		queryset = filter_driver()
+		return queryset.filter(delivered=True)
 	
 
-class DriverSoldUndeliveredProductList(mixins.ListModelMixin, generic.GenericAPIView):
+class DriverSoldUndeliveredProductList(DriverFilterMixin, mixins.ListModelMixin, generic.GenericAPIView):
 	serializer_class = ProductSerializer
 	
 	def get_queryset(self):
-		driver = self.request.driver
-		return Product.objects.filter(delivered=False, customer__isnull=True)
+		queryset = filter_driver()
+		return queryset.filter(delivered=False, customer__isnull=True)
