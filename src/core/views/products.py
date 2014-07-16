@@ -9,24 +9,39 @@ from ..permissions import IsDriver, IsCustomer
 
 class DriverUnsoldProductList(mixins.ListModelMixin, generic.GenericAPIView):
 	serializer_class = ProuctSerializer
-	queryset = Product.objects.filters(customer__isnull=True)
+	
+	def get_queryset(self):
+		driver = self.request.driver
+		return Product.objects.filter(customer__isnull=True, driver=driver)
 
 
 class DriverSoldProductList(mixins.ListModelMixin, generic.GenericAPIView):
 	serializer_class = ProductSerializer
-	queryset = Product.objects.filters(customer__isnull=False)
+	
+	def get_queryset(self):
+		driver = self.request.driver
+		return Product.objects.filter(customer__isnull=False)
 
 	
 class DriverUndeliveredProductList(mixins.ListModelMixin, generic.GenericAPIView):
 	serializer_class = ProductSerializer
-	queryset = Product.objects.filters(delivered=False)
+
+	def get_queryset(self):
+		driver = self.request.driver
+		return Product.objects.filter(delivered=False)
 
 	
 class DriverDeliveredProducList(mixins.ListModelMixin, generic.GenericAPIView):
 	serializer_class = ProductSerializer
-	queryset = Product.objects.filters(delivered=True)
+	
+	def get_queryset(self):
+		driver = self.request.driver
+		return Product.objects.filter(delivered=True)
 	
 
 class DriverSoldUndeliveredProductList(mixins.ListModelMixin, generic.GenericAPIView):
 	serializer_class = ProductSerializer
-	queryset = Product.objects.filters(delivered=False, customer__isnull=True)
+	
+	def get_queryset(self):
+		driver = self.request.driver
+		return Product.objects.filter(delivered=False, customer__isnull=True)
