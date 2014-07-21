@@ -26,7 +26,7 @@ class CustomerSerializer(serializers.HyperlinkedModelSerializer):
 		fields = (
 			'url',
 			'phone_number',
-			'products'
+			'customer_informations'
 		)
 		
 
@@ -38,7 +38,7 @@ class CustomerInformationSerializer(serializers.HyperlinkedModelSerializer):
 			'url',
 			'name',
 			'customer',
-			'orders',
+			'products',
 			'location'
 		)
 		
