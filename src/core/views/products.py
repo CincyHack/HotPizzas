@@ -3,9 +3,9 @@
 from rest_framework import generics
 from rest_framework import mixins
 from ..serializers import ProductSerializer
-from ..models import Product
+from ..models import Product, CustomerInformation, Customer
 from ..permissions import IsDriver, IsCustomer
-
+from ..include import get_coord_offsets
 
 class CustomerFilterMixin(object):
 	
@@ -26,8 +26,20 @@ class LocalizedAvailableProductList(mixins.ListModelMixin, generics.GenericAPIVi
 	serializer_class = ProductSerializer
 	
 	def get_queryset(self):
-		#FIXME: actually filter based on locality
-		return Product.objects.all()
+		user = self.request.user
+		customer_info = CustomerInformation.objects.get(user=user)
+		(long_min, long_max, lat_min, lat_max) = get_coord_offsets(
+			customer_info.location.longitude,
+			customer_info.location.latitude,
+			10,
+			'm'
+		)
+		return Product.objects.filter(
+			location__longitude__gte=long_min,
+			location__longitude__lte=long_max,
+			location__latitude__gte=lat_min,
+			location__latiude__lte=lat_max
+		)
 		
 
 class DriverFilterMixin(object):
