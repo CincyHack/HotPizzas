@@ -26,11 +26,11 @@ class LocalizedAvailableProductList(mixins.ListModelMixin, generics.GenericAPIVi
 	serializer_class = ProductSerializer
 	
 	def get_queryset(self):
-		user = self.request.user
-		customer_info = CustomerInformation.objects.get(user=user)
+		longitude = self.request.longitude
+		latitude = self.request.latitude
 		(long_min, long_max, lat_min, lat_max) = get_coord_offsets(
-			customer_info.location.longitude,
-			customer_info.location.latitude,
+			longitude,
+			latitude,
 			10,
 			'm'
 		)
