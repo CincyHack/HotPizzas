@@ -7,6 +7,9 @@ from .api import (
 	CustomerInformationViewSet,
 	LocationViewSet,
 )
+from .products import (
+	LocalizedAvailableProductList
+)
 
 __all__ = [
 	'ProductViewSet',
@@ -16,4 +19,5 @@ __all__ = [
 	'CustomerViewSet',
 	'CustomerInformationViewSet',
 	'LocationViewSet',
+	'LocalizedAvailableProductList',
 ]
