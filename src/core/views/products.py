@@ -2,9 +2,11 @@
 
 from rest_framework import generics
 from rest_framework import mixins
+from rest_framework import views
+from rest_framework import status
+from rest_framework.response import Response
 from ..serializers import ProductSerializer
 from ..models import Product, CustomerInformation, Customer
-from ..permissions import IsDriver, IsCustomer
 from ..include import get_coord_offsets
 
 class CustomerFilterMixin(object):
@@ -22,24 +24,33 @@ class CustomerUndeliveredProductList(CustomerFilterMixin, mixins.ListModelMixin,
 		return queryset.filter(delivered__isnull=True)
 		
 		
-class LocalizedAvailableProductList(mixins.ListModelMixin, generics.GenericAPIView):
-	serializer_class = ProductSerializer
-	
-	def get_queryset(self):
-		longitude = self.request.longitude
-		latitude = self.request.latitude
-		(long_min, long_max, lat_min, lat_max) = get_coord_offsets(
-			longitude,
-			latitude,
-			10,
-			'm'
-		)
-		return Product.objects.filter(
-			location__longitude__gte=long_min,
-			location__longitude__lte=long_max,
-			location__latitude__gte=lat_min,
-			location__latiude__lte=lat_max
-		)
+class LocalizedAvailableProductList(views.APIView):
+
+	def get(self, request, format=None):
+		if 'longitude' in request.GET and 'latitude' in request.GET:
+			#FIXME: !!! Ensure long and lat parse to float
+			longitude = float(request.GET.get('longitude'))
+			latitude = float(request.GET.get('latitude'))
+			#(long_min, long_max, lat_min, lat_max) = get_coord_offsets(
+			#	longitude,
+			#	latitude,
+			#	10,
+			#	'm'
+			#)
+			products = Product.objects.filter(
+				location__longitude__gte=-10.0,#long_min,
+				location__longitude__lte=10.0,#long_max,
+				location__latitude__gte=-10.0,#lat_min,
+				location__latitude__lte=10.0,#lat_max
+				customer__isnull=True
+			)
+			serializer = ProductSerializer(products, many=True)
+			return Response(serializer.data)
+		else: # Either longitude or latitude aren't in the request queryset
+			return Response(
+				{'details':'longitude and latitude must be defined in query string. Try adding "?longitude=0.0&latitude=0.0"'},
+				status=status.HTTP_400_BAD_REQUEST,
+			)	
 		
 
 class DriverFilterMixin(object):
@@ -50,7 +61,7 @@ class DriverFilterMixin(object):
 
 
 class DriverUnsoldProductList(DriverFilterMixin, mixins.ListModelMixin, generics.GenericAPIView):
-	serializer_class = ProuctSerializer
+	serializer_class = ProductSerializer
 	
 	def get_queryset(self):
 		queryset = filter_driver()

@@ -9,6 +9,7 @@ from core.views import (
 	CustomerViewSet,
 	CustomerInformationViewSet,
 	LocationViewSet,
+	LocalizedAvailableProductList,
 )
 from rest_framework.routers import DefaultRouter
 admin.autodiscover()
@@ -24,6 +25,7 @@ router.register(r'location', LocationViewSet)
 
 urlpatterns = patterns('',
 	url(r'^api/', include(router.urls)),
+	url(r'^api/local/$', LocalizedAvailableProductList.as_view()),
 	url(r'^admin/', include(admin.site.urls)),
 	#/login/ to sign in to the application
 	url(r'^login/$', 'django.contrib.auth.views.login', {'template_name': 'login.html'}),
