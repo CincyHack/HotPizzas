@@ -59,6 +59,7 @@ class ProductSerializer(serializers.HyperlinkedModelSerializer):
 
 	longitude = serializers.Field(source='location.longitude')
 	latitude = serializers.Field(source='location.latitude')
+	configurations= serializers.RelatedField(many=True)
 
 	class Meta:
 		model = Product
