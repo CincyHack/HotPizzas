@@ -57,6 +57,9 @@ class DriverSerializer(serializers.HyperlinkedModelSerializer):
 
 class ProductSerializer(serializers.HyperlinkedModelSerializer):
 
+	longitude = serializers.Field(source='location.longitude')
+	latitude = serializers.Field(source='location.latitude')
+
 	class Meta:
 		model = Product
 		fields = (
@@ -68,7 +71,8 @@ class ProductSerializer(serializers.HyperlinkedModelSerializer):
 			'request_time',
 			'customer',
 			'configurations',
-			'location'
+			'longitude',
+			'latitude',
 		)
 
 
