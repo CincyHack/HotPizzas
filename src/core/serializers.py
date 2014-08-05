@@ -77,13 +77,14 @@ class ProductSerializer(serializers.HyperlinkedModelSerializer):
 		)
 
 
-class ProductTypeSerializer(serializers.HyperlinkedModelSerializer):
-	
+class ProductTypeSerializer(serializers.HyperlinkedModelSerializer):	
+
 	class Meta:
 		model = ProductType
 		fields = (
 			'url',
-			'name'
+			'name',
+			'configurations',
 		)
 
 
