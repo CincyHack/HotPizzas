@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-
+from django.utils import timezone
 from rest_framework import generics
 from rest_framework import mixins
 from rest_framework import views
@@ -41,7 +41,8 @@ class LocalizedAvailableProductList(views.APIView):
 				location__longitude__lte=long_max,
 				location__latitude__gte=-lat_min,
 				location__latitude__lte=lat_max,
-				customer__isnull=True
+				customer__isnull=True,
+				expiration_time__gt=timezone.now()
 			)
 			serializer = ProductSerializer(products, many=True, context={'request':request})
 			return Response(serializer.data)
