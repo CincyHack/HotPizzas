@@ -31,5 +31,6 @@ urlpatterns = patterns('',
 	url(r'^login/$', 'django.contrib.auth.views.login', {'template_name': 'login.html'}),
 	#/logout/ to sign out of the application
 	url(r'^logout/$', 'django.contrib.auth.views.logout', {'template_name': 'login.html'}),
+	url(r'^token/$', 'rest_framework_jwt.views.obtain_jwt_token'),
 )
 
