@@ -46,7 +46,7 @@ INSTALLED_APPS = (
     'south',
     'rest_framework',
     'core',
-	'oauth2_provider',
+    'oauth2_provider',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -105,14 +105,14 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.UnicodeJSONRenderer',
         'rest_framework.renderers.BrowsableAPIRenderer'
     ),
-	'DEFAULT_PERMISSION_CLASSES': (
-		'rest_framework.permissions.IsAuthenticated',
-	),
-	'DEFAULT_AUTHENTICATION_CLASSES': (
-		'rest_framework.authentication.SessionAuthentication',
-		'rest_framework.authentication.BasicAuthentication',
-		'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
-		'oauth2_provider.ext.rest_framework.OAuth2Authentication',
-	),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'oauth2_provider.ext.rest_framework.OAuth2Authentication',
+    ),
 }
 
