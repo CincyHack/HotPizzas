@@ -27,10 +27,7 @@ urlpatterns = patterns('',
 	url(r'^api/', include(router.urls)),
 	url(r'^api/local/$', LocalizedAvailableProductList.as_view()),
 	url(r'^admin/', include(admin.site.urls)),
-	#/login/ to sign in to the application
-	url(r'^login/$', 'django.contrib.auth.views.login', {'template_name': 'login.html'}),
-	#/logout/ to sign out of the application
-	url(r'^logout/$', 'django.contrib.auth.views.logout', {'template_name': 'login.html'}),
+	url(r'^oauth/', include('oauth2_provider.urls', namespace='oauth2_provider')),
 	url(r'^token/$', 'rest_framework_jwt.views.obtain_jwt_token'),
 )
 
