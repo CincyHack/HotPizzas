@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 from django.utils import timezone
 from rest_framework import generics
-from rest_framework import mixins
+from rest_framework.mixins import (
+	ListModelMixin
+)
 from rest_framework import views
 from rest_framework import status
 from rest_framework.response import Response
@@ -16,7 +18,7 @@ class CustomerFilterMixin(object):
 		return Product.objects.filter(customer__user=customer)
 		
 		
-class CustomerUndeliveredProductList(CustomerFilterMixin, mixins.ListModelMixin, generics.GenericAPIView):
+class CustomerUndeliveredProductList(CustomerFilterMixin, ListModelMixin, generics.GenericAPIView):
 	serializer_class = ProductSerializer
 	
 	def get_queryset(self):
@@ -60,7 +62,7 @@ class DriverFilterMixin(object):
 		return Product.objects.filter(driver__user=driver)
 
 
-class DriverUnsoldProductList(DriverFilterMixin, mixins.ListModelMixin, generics.GenericAPIView):
+class DriverUnsoldProductList(DriverFilterMixin, ListModelMixin, generics.GenericAPIView):
 	serializer_class = ProductSerializer
 	
 	def get_queryset(self):
@@ -68,7 +70,7 @@ class DriverUnsoldProductList(DriverFilterMixin, mixins.ListModelMixin, generics
 		return queryset.filter(customer__isnull=True)
 
 
-class DriverSoldProductList(DriverFilterMixin, mixins.ListModelMixin, generics.GenericAPIView):
+class DriverSoldProductList(DriverFilterMixin, ListModelMixin, generics.GenericAPIView):
 	serializer_class = ProductSerializer
 	
 	def get_queryset(self):
@@ -76,7 +78,7 @@ class DriverSoldProductList(DriverFilterMixin, mixins.ListModelMixin, generics.G
 		return queryset.filter(customer__isnull=False)
 
 	
-class DriverUndeliveredProductList(DriverFilterMixin, mixins.ListModelMixin, generics.GenericAPIView):
+class DriverUndeliveredProductList(DriverFilterMixin, ListModelMixin, generics.GenericAPIView):
 	serializer_class = ProductSerializer
 
 	def get_queryset(self):
@@ -84,7 +86,7 @@ class DriverUndeliveredProductList(DriverFilterMixin, mixins.ListModelMixin, gen
 		return queryset.filter(delivered=False)
 
 	
-class DriverDeliveredProducList(DriverFilterMixin, mixins.ListModelMixin, generics.GenericAPIView):
+class DriverDeliveredProducList(DriverFilterMixin, ListModelMixin, generics.GenericAPIView):
 	serializer_class = ProductSerializer
 	
 	def get_queryset(self):
@@ -92,7 +94,7 @@ class DriverDeliveredProducList(DriverFilterMixin, mixins.ListModelMixin, generi
 		return queryset.filter(delivered=True)
 	
 
-class DriverSoldUndeliveredProductList(DriverFilterMixin, mixins.ListModelMixin, generics.GenericAPIView):
+class DriverSoldUndeliveredProductList(DriverFilterMixin, ListModelMixin, generics.GenericAPIView):
 	serializer_class = ProductSerializer
 	
 	def get_queryset(self):

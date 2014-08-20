@@ -1,5 +1,10 @@
-from rest_framework import viewsets
-from rest_framework import mixins
+from rest_framework.viewsets import GenericViewSet
+from rest_framework.mixins import (
+	CreateModelMixin,
+	ListModelMixin,
+	RetrieveModelMixin,
+	UpdateModelMixin,
+)
 from ..models import (
 	Product,
 	ProductType,
@@ -7,7 +12,7 @@ from ..models import (
 	Driver,
 	Customer,
 	CustomerInformation,
-	Location
+	Location,
 )
 from ..serializers import (
 	ProductSerializer,
@@ -16,39 +21,39 @@ from ..serializers import (
 	DriverSerializer, 
 	CustomerSerializer,
 	CustomerInformationSerializer,
-	LocationSerializer
+	LocationSerializer,
 )
 
-class LocationViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
+class LocationViewSet(CreateModelMixin, ListModelMixin, RetrieveModelMixin, UpdateModelMixin, GenericViewSet):
 	queryset = Location.objects.all()
 	serializer_class = LocationSerializer
 
 
-class ProductViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
+class ProductViewSet(CreateModelMixin, ListModelMixin, RetrieveModelMixin, UpdateModelMixin, GenericViewSet):
 	queryset = Product.objects.all()
 	serializer_class = ProductSerializer
 
 
-class ProductTypeViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
+class ProductTypeViewSet(CreateModelMixin, ListModelMixin, RetrieveModelMixin, UpdateModelMixin, GenericViewSet):
 	queryset = ProductType.objects.all()
 	serializer_class = ProductTypeSerializer
 
 
-class ProductConfigurationViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
+class ProductConfigurationViewSet(CreateModelMixin, ListModelMixin, RetrieveModelMixin, UpdateModelMixin, GenericViewSet):
 	queryset = ProductConfiguration.objects.all()
 	serializer_class = ProductConfigurationSerializer
 
 
-class DriverViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
+class DriverViewSet(CreateModelMixin, ListModelMixin, RetrieveModelMixin, UpdateModelMixin, GenericViewSet):
 	queryset = Driver.objects.all()
 	serializer_class = DriverSerializer
 	
 
-class CustomerViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
+class CustomerViewSet(CreateModelMixin, ListModelMixin, RetrieveModelMixin, UpdateModelMixin, GenericViewSet):
 	queryset = Customer.objects.all()
 	serializer_class = CustomerSerializer
 
 
-class CustomerInformationViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
+class CustomerInformationViewSet(CreateModelMixin, ListModelMixin, RetrieveModelMixin, UpdateModelMixin, GenericViewSet):
 	queryset = CustomerInformation.objects.all()
 	serializer_class = CustomerInformationSerializer
