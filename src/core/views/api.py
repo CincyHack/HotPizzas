@@ -24,6 +24,7 @@ from ..serializers import (
 	LocationSerializer,
 )
 
+
 class LocationViewSet(CreateModelMixin, ListModelMixin, RetrieveModelMixin, UpdateModelMixin, GenericViewSet):
 	queryset = Location.objects.all()
 	serializer_class = LocationSerializer
@@ -57,3 +58,4 @@ class CustomerViewSet(CreateModelMixin, ListModelMixin, RetrieveModelMixin, Upda
 class CustomerInformationViewSet(CreateModelMixin, ListModelMixin, RetrieveModelMixin, UpdateModelMixin, GenericViewSet):
 	queryset = CustomerInformation.objects.all()
 	serializer_class = CustomerInformationSerializer
+

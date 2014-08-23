@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 import os
 from unipath import Path
 
+
 BASE_DIR = Path(__file__).ancestor(3)
 STATICFILES_DIRS = (
     BASE_DIR.child('static'),
@@ -19,6 +20,7 @@ STATICFILES_DIRS = (
 TEMPLATE_DIRS = (
     BASE_DIR.child('templates'),
 )
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
@@ -77,6 +79,7 @@ DATABASES = {
     }
 }
 
+
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/
 
@@ -98,6 +101,16 @@ STATIC_URL = '/static/'
 LOGIN_REDIRECT_URL = "/"
 LOGIN_URL="/login/"
 
+
+# Oauth2 settings
+OAUTH2_PROVIDER = {
+	'SCOPES' : {
+		'customer' : 'Customer Scope',
+		'driver' : 'Driver Scope',
+	},
+}
+
+
 # Django REST Framework settings
 
 REST_FRAMEWORK = {
@@ -107,7 +120,6 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticatedOrReadOnly',
-        'oauth2_provider.ext.rest_framework.TokenHasScope',
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.SessionAuthentication',
