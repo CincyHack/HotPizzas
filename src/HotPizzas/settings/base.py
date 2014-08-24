@@ -102,6 +102,10 @@ LOGIN_REDIRECT_URL = "/"
 LOGIN_URL="/login/"
 
 
+# Set user model
+AUTH_USER_MODEL = 'core.HotPizzasUser'
+
+
 # Oauth2 settings
 OAUTH2_PROVIDER = {
 	'SCOPES' : {

@@ -14,11 +14,21 @@ class Location(models.Model):
 		return "(" + str(self.longitude) + ", " + str(self.latitude) + ")"
 
 
-class Customer(AbstractBaseUser):
+class HotPizzasUser(AbstractBaseUser):
+
+	class Meta:
+		app_label = "core"
+
+	is_customer = models.BooleanField(default=True)
+	is_driver = models.BooleanField(default=False)
+
+
+class Customer(models.Model):
 	
 	class Meta:
 		app_label = "core"
 
+	user = models.ForeignKey(HotPizzasUser, related_name='customer')
 	phone_number = models.CharField(max_length=15, primary_key=True)
 
 	def __str__(self):
@@ -38,7 +48,7 @@ class CustomerInformation(models.Model):
 		return str(self.name)
 
 
-class Driver(AbstractBaseUser):
+class Driver(models.Model):
 	class Meta:
 		app_label = "core"
 
@@ -48,8 +58,6 @@ class Driver(AbstractBaseUser):
 		unique=True,
 	)
 	phone_number = models.CharField(max_length=15)
-	is_active = models.BooleanField(default=True)
-	is_admin = models.BooleanField(default=False)
 
 	def __str__(self):
 		return str(self.email)
