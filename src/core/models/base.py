@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+from django.contrib.auth.models import AbstractUser, BaseUserManager
 
 
 class Location(models.Model):
@@ -14,7 +14,7 @@ class Location(models.Model):
 		return "(" + str(self.longitude) + ", " + str(self.latitude) + ")"
 
 
-class HotPizzasUser(AbstractBaseUser):
+class HotPizzasUser(AbstractUser):
 
 	class Meta:
 		app_label = "core"
