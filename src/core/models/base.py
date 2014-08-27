@@ -21,6 +21,7 @@ class HotPizzasUser(AbstractUser):
 
 	is_customer = models.BooleanField(default=True)
 	is_driver = models.BooleanField(default=False)
+	phone_number = models.CharField(max_length=15)
 
 
 class Customer(models.Model):
@@ -29,7 +30,6 @@ class Customer(models.Model):
 		app_label = "core"
 
 	user = models.ForeignKey(HotPizzasUser, related_name='customer')
-	phone_number = models.CharField(max_length=15, primary_key=True)
 
 	def __str__(self):
 		return str(self.phone_number)
@@ -49,15 +49,11 @@ class CustomerInformation(models.Model):
 
 
 class Driver(models.Model):
+	
 	class Meta:
 		app_label = "core"
-
-	email = models.EmailField(
-		verbose_name='email address',
-		max_length=255,
-		unique=True,
-	)
-	phone_number = models.CharField(max_length=15)
+		
+	user = models.ForeignKey(HotPizzasUser, related_name='driver')
 
 	def __str__(self):
 		return str(self.email)
