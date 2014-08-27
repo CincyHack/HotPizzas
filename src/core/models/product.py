@@ -1,5 +1,6 @@
 from django.db import models
-from .base import Driver, CustomerInformation, Location 
+from django.core.exceptions import ValidationError
+from .base import HotPizzasUser, Location 
 
 
 class ProductType(models.Model):
@@ -35,13 +36,28 @@ class Product(models.Model):
 	base_price = models.DecimalField(max_digits=4, decimal_places=2)
 	product_type = models.ForeignKey(ProductType)
 	configurations = models.ManyToManyField(ProductConfiguration)
-	customer = models.ForeignKey(CustomerInformation, null=True, blank=True, related_name='products')
+	customer = models.ForeignKey(HotPizzasUser, null=True, blank=True, related_name='products')
 	location = models.ForeignKey(Location, related_name='products')
-	driver = models.ForeignKey(Driver, related_name='products')
+	driver = models.ForeignKey(HotPizzasUser, related_name='products')
 	delivered = models.BooleanField(default=False)
 	request_time = models.DateTimeField(null=True, blank=True)
 	
 
 	def __str__(self):
 		return str(self.product_type) + str(self.id)
+
+	def clean(self):
+		is_error = False
+		err_str = []
+
+		if not self.driver.is_driver:
+			is_error = True
+			err_str.append("Product driver user must be a driver")
+
+		if self.customer and not self.customer.is_customer:
+			is_error = True
+			err_str.append("Product customer user must be a customer")
+
+		if is_error:
+			raise ValidationError((", ".join(err_str) + "."))
 

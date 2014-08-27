@@ -11,7 +11,7 @@ class Location(models.Model):
 	latitude = models.DecimalField(max_digits=10, decimal_places=5)
 	
 	def __str__(self):
-		return "(" + str(self.longitude) + ", " + str(self.latitude) + ")"
+		return "(" + str(self.latitude) + ", " + str(self.longitude) + ")"
 
 
 class HotPizzasUser(AbstractUser):
@@ -22,39 +22,10 @@ class HotPizzasUser(AbstractUser):
 	is_customer = models.BooleanField(default=True)
 	is_driver = models.BooleanField(default=False)
 	phone_number = models.CharField(max_length=15)
-
-
-class Customer(models.Model):
-	
-	class Meta:
-		app_label = "core"
-
-	user = models.ForeignKey(HotPizzasUser, related_name='customer')
-
-	def __str__(self):
-		return str(self.phone_number)
-
-
-class CustomerInformation(models.Model):
-	
-	class Meta:
-		app_label = "core"
-		
 	name = models.CharField(max_length=100)
-	customer = models.ForeignKey(Customer, related_name='customer_informations')
-	location = models.ForeignKey(Location, related_name='customer')
+	location = models.ForeignKey(Location, related_name='user')
 
 	def __str__(self):
 		return str(self.name)
 
-
-class Driver(models.Model):
-	
-	class Meta:
-		app_label = "core"
-		
-	user = models.ForeignKey(HotPizzasUser, related_name='driver')
-
-	def __str__(self):
-		return str(self.email)
 
