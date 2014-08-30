@@ -6,21 +6,17 @@ from rest_framework.mixins import (
 	UpdateModelMixin,
 )
 from ..models import (
+	HotPizzasUser,
 	Product,
 	ProductType,
 	ProductConfiguration,
-	Driver,
-	Customer,
-	CustomerInformation,
 	Location,
 )
 from ..serializers import (
+	HotPizzasUserSerializer,
 	ProductSerializer,
 	ProductTypeSerializer,
 	ProductConfigurationSerializer, 
-	DriverSerializer, 
-	CustomerSerializer,
-	CustomerInformationSerializer,
 	LocationSerializer,
 )
 
@@ -46,16 +42,12 @@ class ProductConfigurationViewSet(CreateModelMixin, ListModelMixin, RetrieveMode
 
 
 class DriverViewSet(CreateModelMixin, ListModelMixin, RetrieveModelMixin, UpdateModelMixin, GenericViewSet):
-	queryset = Driver.objects.all()
-	serializer_class = DriverSerializer
+	queryset = HotPizzasUser.objects.filter(is_driver=True)
+	serializer_class = HotPizzasUserSerializer
 	
 
 class CustomerViewSet(CreateModelMixin, ListModelMixin, RetrieveModelMixin, UpdateModelMixin, GenericViewSet):
-	queryset = Customer.objects.all()
-	serializer_class = CustomerSerializer
+	queryset = HotPizzasUser.objects.filter(is_customer=True)
+	serializer_class = HotPizzasUserSerializer
 
-
-class CustomerInformationViewSet(CreateModelMixin, ListModelMixin, RetrieveModelMixin, UpdateModelMixin, GenericViewSet):
-	queryset = CustomerInformation.objects.all()
-	serializer_class = CustomerInformationSerializer
 
