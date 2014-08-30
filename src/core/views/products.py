@@ -8,21 +8,21 @@ from rest_framework import views
 from rest_framework import status
 from rest_framework.response import Response
 from ..serializers import ProductSerializer
-from ..models import Product, CustomerInformation, Customer
+from ..models import Product, HotPizzasUser
 from ..include import get_coord_offsets
 
 class CustomerFilterMixin(object):
 	
 	def filter_customer(self):
 		customer = self.request.user
-		return Product.objects.filter(customer__user=customer)
+		return Product.objects.filter(customer=customer)
 		
 		
 class CustomerUndeliveredProductList(CustomerFilterMixin, ListModelMixin, generics.GenericAPIView):
 	serializer_class = ProductSerializer
 	
 	def get_queryset(self):
-		queryset = filter_customer()
+		queryset = self.filter_customer()
 		return queryset.filter(delivered__isnull=True)
 		
 		
@@ -59,14 +59,14 @@ class DriverFilterMixin(object):
 	
 	def filter_driver(self):
 		driver = self.request.user
-		return Product.objects.filter(driver__user=driver)
+		return Product.objects.filter(driver=driver)
 
 
 class DriverUnsoldProductList(DriverFilterMixin, ListModelMixin, generics.GenericAPIView):
 	serializer_class = ProductSerializer
 	
 	def get_queryset(self):
-		queryset = filter_driver()
+		queryset = self.filter_driver()
 		return queryset.filter(customer__isnull=True)
 
 
@@ -74,7 +74,7 @@ class DriverSoldProductList(DriverFilterMixin, ListModelMixin, generics.GenericA
 	serializer_class = ProductSerializer
 	
 	def get_queryset(self):
-		queryset = filter_driver()
+		queryset = self.filter_driver()
 		return queryset.filter(customer__isnull=False)
 
 	
@@ -82,7 +82,7 @@ class DriverUndeliveredProductList(DriverFilterMixin, ListModelMixin, generics.G
 	serializer_class = ProductSerializer
 
 	def get_queryset(self):
-		queryset = filter_driver()
+		queryset = self.filter_driver()
 		return queryset.filter(delivered=False)
 
 	
@@ -90,7 +90,7 @@ class DriverDeliveredProducList(DriverFilterMixin, ListModelMixin, generics.Gene
 	serializer_class = ProductSerializer
 	
 	def get_queryset(self):
-		queryset = filter_driver()
+		queryset = self.filter_driver()
 		return queryset.filter(delivered=True)
 	
 
@@ -98,6 +98,6 @@ class DriverSoldUndeliveredProductList(DriverFilterMixin, ListModelMixin, generi
 	serializer_class = ProductSerializer
 	
 	def get_queryset(self):
-		queryset = filter_driver()
+		queryset = self.filter_driver()
 		return queryset.filter(delivered=False, customer__isnull=True)
 
