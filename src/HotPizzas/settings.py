@@ -70,7 +70,7 @@ DATABASES = {
         'NAME': 'hotpizzas',
         'USER': 'hotpizzas',
         'PASSWORD': 'hotpizzas',
-        'HOST': 'devdb.clqblfd0mdpm.us-east-1.rds.amazonaws.com',
+        'HOST': 'develop0.clqblfd0mdpm.us-east-1.rds.amazonaws.com',
         'PORT': '5432',
     }
 }
