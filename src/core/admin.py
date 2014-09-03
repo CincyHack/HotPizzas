@@ -3,16 +3,12 @@ from .models import (
 	Product,
 	ProductType,
 	ProductConfiguration,
-	Driver,
-	Customer,
-	CustomerInformation,
+	HotPizzasUser,
 	Location,
 )
 
 admin.site.register(Product)
 admin.site.register(ProductType)
 admin.site.register(ProductConfiguration)
-admin.site.register(Driver)
-admin.site.register(Customer)
-admin.site.register(CustomerInformation)
+admin.site.register(HotPizzasUser)
 admin.site.register(Location)
