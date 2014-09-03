@@ -1,197 +1,133 @@
 # -*- coding: utf-8 -*-
-from south.utils import datetime_utils as datetime
-from south.db import db
-from south.v2 import SchemaMigration
-from django.db import models
+from __future__ import unicode_literals
+
+from django.db import models, migrations
+import django.core.validators
+import django.utils.timezone
+from django.conf import settings
 
 
-class Migration(SchemaMigration):
+class Migration(migrations.Migration):
 
-    def forwards(self, orm):
-        # Adding model 'Location'
-        db.create_table(u'core_location', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('longitude', self.gf('django.db.models.fields.DecimalField')(max_digits=10, decimal_places=5)),
-            ('latitude', self.gf('django.db.models.fields.DecimalField')(max_digits=10, decimal_places=5)),
-        ))
-        db.send_create_signal('core', ['Location'])
+    dependencies = [
+        ('auth', '0001_initial'),
+    ]
 
-        # Adding model 'HotPizzasUser'
-        db.create_table(u'core_hotpizzasuser', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('password', self.gf('django.db.models.fields.CharField')(max_length=128)),
-            ('last_login', self.gf('django.db.models.fields.DateTimeField')(default=datetime.datetime.now)),
-            ('is_superuser', self.gf('django.db.models.fields.BooleanField')(default=False)),
-            ('username', self.gf('django.db.models.fields.CharField')(unique=True, max_length=30)),
-            ('first_name', self.gf('django.db.models.fields.CharField')(max_length=30, blank=True)),
-            ('last_name', self.gf('django.db.models.fields.CharField')(max_length=30, blank=True)),
-            ('email', self.gf('django.db.models.fields.EmailField')(max_length=75, blank=True)),
-            ('is_staff', self.gf('django.db.models.fields.BooleanField')(default=False)),
-            ('is_active', self.gf('django.db.models.fields.BooleanField')(default=True)),
-            ('date_joined', self.gf('django.db.models.fields.DateTimeField')(default=datetime.datetime.now)),
-            ('is_customer', self.gf('django.db.models.fields.BooleanField')(default=True)),
-            ('is_driver', self.gf('django.db.models.fields.BooleanField')(default=False)),
-            ('phone_number', self.gf('django.db.models.fields.CharField')(max_length=15)),
-            ('name', self.gf('django.db.models.fields.CharField')(max_length=100)),
-            ('location', self.gf('django.db.models.fields.related.ForeignKey')(related_name='user', to=orm['core.Location'])),
-        ))
-        db.send_create_signal('core', ['HotPizzasUser'])
-
-        # Adding M2M table for field groups on 'HotPizzasUser'
-        m2m_table_name = db.shorten_name(u'core_hotpizzasuser_groups')
-        db.create_table(m2m_table_name, (
-            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
-            ('hotpizzasuser', models.ForeignKey(orm['core.hotpizzasuser'], null=False)),
-            ('group', models.ForeignKey(orm[u'auth.group'], null=False))
-        ))
-        db.create_unique(m2m_table_name, ['hotpizzasuser_id', 'group_id'])
-
-        # Adding M2M table for field user_permissions on 'HotPizzasUser'
-        m2m_table_name = db.shorten_name(u'core_hotpizzasuser_user_permissions')
-        db.create_table(m2m_table_name, (
-            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
-            ('hotpizzasuser', models.ForeignKey(orm['core.hotpizzasuser'], null=False)),
-            ('permission', models.ForeignKey(orm[u'auth.permission'], null=False))
-        ))
-        db.create_unique(m2m_table_name, ['hotpizzasuser_id', 'permission_id'])
-
-        # Adding model 'ProductType'
-        db.create_table(u'core_producttype', (
-            ('name', self.gf('django.db.models.fields.CharField')(max_length=20, primary_key=True)),
-        ))
-        db.send_create_signal('core', ['ProductType'])
-
-        # Adding model 'ProductConfiguration'
-        db.create_table(u'core_productconfiguration', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('description', self.gf('django.db.models.fields.CharField')(max_length=50)),
-            ('product_type', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['core.ProductType'])),
-        ))
-        db.send_create_signal('core', ['ProductConfiguration'])
-
-        # Adding model 'Product'
-        db.create_table(u'core_product', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('cook_time', self.gf('django.db.models.fields.DateTimeField')()),
-            ('expiration_time', self.gf('django.db.models.fields.DateTimeField')()),
-            ('base_price', self.gf('django.db.models.fields.DecimalField')(max_digits=4, decimal_places=2)),
-            ('product_type', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['core.ProductType'])),
-            ('customer', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='products-orders', null=True, to=orm['core.HotPizzasUser'])),
-            ('location', self.gf('django.db.models.fields.related.ForeignKey')(related_name='products', to=orm['core.Location'])),
-            ('driver', self.gf('django.db.models.fields.related.ForeignKey')(related_name='products-deliveries', to=orm['core.HotPizzasUser'])),
-            ('delivered', self.gf('django.db.models.fields.BooleanField')(default=False)),
-            ('request_time', self.gf('django.db.models.fields.DateTimeField')(null=True, blank=True)),
-        ))
-        db.send_create_signal('core', ['Product'])
-
-        # Adding M2M table for field configurations on 'Product'
-        m2m_table_name = db.shorten_name(u'core_product_configurations')
-        db.create_table(m2m_table_name, (
-            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
-            ('product', models.ForeignKey(orm['core.product'], null=False)),
-            ('productconfiguration', models.ForeignKey(orm['core.productconfiguration'], null=False))
-        ))
-        db.create_unique(m2m_table_name, ['product_id', 'productconfiguration_id'])
-
-
-    def backwards(self, orm):
-        # Deleting model 'Location'
-        db.delete_table(u'core_location')
-
-        # Deleting model 'HotPizzasUser'
-        db.delete_table(u'core_hotpizzasuser')
-
-        # Removing M2M table for field groups on 'HotPizzasUser'
-        db.delete_table(db.shorten_name(u'core_hotpizzasuser_groups'))
-
-        # Removing M2M table for field user_permissions on 'HotPizzasUser'
-        db.delete_table(db.shorten_name(u'core_hotpizzasuser_user_permissions'))
-
-        # Deleting model 'ProductType'
-        db.delete_table(u'core_producttype')
-
-        # Deleting model 'ProductConfiguration'
-        db.delete_table(u'core_productconfiguration')
-
-        # Deleting model 'Product'
-        db.delete_table(u'core_product')
-
-        # Removing M2M table for field configurations on 'Product'
-        db.delete_table(db.shorten_name(u'core_product_configurations'))
-
-
-    models = {
-        u'auth.group': {
-            'Meta': {'object_name': 'Group'},
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '80'}),
-            'permissions': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['auth.Permission']", 'symmetrical': 'False', 'blank': 'True'})
-        },
-        u'auth.permission': {
-            'Meta': {'ordering': "(u'content_type__app_label', u'content_type__model', u'codename')", 'unique_together': "((u'content_type', u'codename'),)", 'object_name': 'Permission'},
-            'codename': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'content_type': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['contenttypes.ContentType']"}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '50'})
-        },
-        u'contenttypes.contenttype': {
-            'Meta': {'ordering': "('name',)", 'unique_together': "(('app_label', 'model'),)", 'object_name': 'ContentType', 'db_table': "'django_content_type'"},
-            'app_label': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'model': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
-        },
-        'core.hotpizzasuser': {
-            'Meta': {'object_name': 'HotPizzasUser'},
-            'date_joined': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
-            'email': ('django.db.models.fields.EmailField', [], {'max_length': '75', 'blank': 'True'}),
-            'first_name': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
-            'groups': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'related_name': "u'user_set'", 'blank': 'True', 'to': u"orm['auth.Group']"}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'is_active': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
-            'is_customer': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
-            'is_driver': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'is_staff': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'is_superuser': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'last_login': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
-            'last_name': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
-            'location': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'user'", 'to': "orm['core.Location']"}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'password': ('django.db.models.fields.CharField', [], {'max_length': '128'}),
-            'phone_number': ('django.db.models.fields.CharField', [], {'max_length': '15'}),
-            'user_permissions': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'related_name': "u'user_set'", 'blank': 'True', 'to': u"orm['auth.Permission']"}),
-            'username': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '30'})
-        },
-        'core.location': {
-            'Meta': {'object_name': 'Location'},
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'latitude': ('django.db.models.fields.DecimalField', [], {'max_digits': '10', 'decimal_places': '5'}),
-            'longitude': ('django.db.models.fields.DecimalField', [], {'max_digits': '10', 'decimal_places': '5'})
-        },
-        'core.product': {
-            'Meta': {'object_name': 'Product'},
-            'base_price': ('django.db.models.fields.DecimalField', [], {'max_digits': '4', 'decimal_places': '2'}),
-            'configurations': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['core.ProductConfiguration']", 'symmetrical': 'False'}),
-            'cook_time': ('django.db.models.fields.DateTimeField', [], {}),
-            'customer': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'products-orders'", 'null': 'True', 'to': "orm['core.HotPizzasUser']"}),
-            'delivered': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'driver': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'products-deliveries'", 'to': "orm['core.HotPizzasUser']"}),
-            'expiration_time': ('django.db.models.fields.DateTimeField', [], {}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'location': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'products'", 'to': "orm['core.Location']"}),
-            'product_type': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['core.ProductType']"}),
-            'request_time': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'})
-        },
-        'core.productconfiguration': {
-            'Meta': {'object_name': 'ProductConfiguration'},
-            'description': ('django.db.models.fields.CharField', [], {'max_length': '50'}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'product_type': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['core.ProductType']"})
-        },
-        'core.producttype': {
-            'Meta': {'object_name': 'ProductType'},
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '20', 'primary_key': 'True'})
-        }
-    }
-
-    complete_apps = ['core']
+    operations = [
+        migrations.CreateModel(
+            name='HotPizzasUser',
+            fields=[
+                ('id', models.AutoField(auto_created=True, verbose_name='ID', primary_key=True, serialize=False)),
+                ('password', models.CharField(verbose_name='password', max_length=128)),
+                ('last_login', models.DateTimeField(verbose_name='last login', default=django.utils.timezone.now)),
+                ('is_superuser', models.BooleanField(verbose_name='superuser status', default=False, help_text='Designates that this user has all permissions without explicitly assigning them.')),
+                ('username', models.CharField(verbose_name='username', unique=True, validators=[django.core.validators.RegexValidator('^[\\w.@+-]+$', 'Enter a valid username.', 'invalid')], help_text='Required. 30 characters or fewer. Letters, digits and @/./+/-/_ only.', max_length=30)),
+                ('first_name', models.CharField(verbose_name='first name', blank=True, max_length=30)),
+                ('last_name', models.CharField(verbose_name='last name', blank=True, max_length=30)),
+                ('email', models.EmailField(verbose_name='email address', blank=True, max_length=75)),
+                ('is_staff', models.BooleanField(verbose_name='staff status', default=False, help_text='Designates whether the user can log into this admin site.')),
+                ('is_active', models.BooleanField(verbose_name='active', default=True, help_text='Designates whether this user should be treated as active. Unselect this instead of deleting accounts.')),
+                ('date_joined', models.DateTimeField(verbose_name='date joined', default=django.utils.timezone.now)),
+                ('is_customer', models.BooleanField(default=True)),
+                ('is_driver', models.BooleanField(default=False)),
+                ('phone_number', models.CharField(max_length=15)),
+                ('name', models.CharField(max_length=100)),
+                ('groups', models.ManyToManyField(verbose_name='groups', related_name='user_set', blank=True, to='auth.Group', related_query_name='user', help_text='The groups this user belongs to. A user will get all permissions granted to each of his/her group.')),
+            ],
+            options={
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='Location',
+            fields=[
+                ('id', models.AutoField(auto_created=True, verbose_name='ID', primary_key=True, serialize=False)),
+                ('longitude', models.DecimalField(decimal_places=5, max_digits=10)),
+                ('latitude', models.DecimalField(decimal_places=5, max_digits=10)),
+            ],
+            options={
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='Product',
+            fields=[
+                ('id', models.AutoField(auto_created=True, verbose_name='ID', primary_key=True, serialize=False)),
+                ('cook_time', models.DateTimeField()),
+                ('expiration_time', models.DateTimeField()),
+                ('base_price', models.DecimalField(decimal_places=2, max_digits=4)),
+                ('delivered', models.BooleanField(default=False)),
+                ('request_time', models.DateTimeField(null=True, blank=True)),
+            ],
+            options={
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='ProductConfiguration',
+            fields=[
+                ('id', models.AutoField(auto_created=True, verbose_name='ID', primary_key=True, serialize=False)),
+                ('description', models.CharField(max_length=50)),
+            ],
+            options={
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='ProductType',
+            fields=[
+                ('name', models.CharField(primary_key=True, serialize=False, max_length=20)),
+            ],
+            options={
+            },
+            bases=(models.Model,),
+        ),
+        migrations.AddField(
+            model_name='productconfiguration',
+            name='product_type',
+            field=models.ForeignKey(to='core.ProductType'),
+            preserve_default=True,
+        ),
+        migrations.AddField(
+            model_name='product',
+            name='configurations',
+            field=models.ManyToManyField(to='core.ProductConfiguration'),
+            preserve_default=True,
+        ),
+        migrations.AddField(
+            model_name='product',
+            name='customer',
+            field=models.ForeignKey(related_name='products-orders', blank=True, null=True, to=settings.AUTH_USER_MODEL),
+            preserve_default=True,
+        ),
+        migrations.AddField(
+            model_name='product',
+            name='driver',
+            field=models.ForeignKey(related_name='products-deliveries', to=settings.AUTH_USER_MODEL),
+            preserve_default=True,
+        ),
+        migrations.AddField(
+            model_name='product',
+            name='location',
+            field=models.ForeignKey(related_name='products', to='core.Location'),
+            preserve_default=True,
+        ),
+        migrations.AddField(
+            model_name='product',
+            name='product_type',
+            field=models.ForeignKey(to='core.ProductType'),
+            preserve_default=True,
+        ),
+        migrations.AddField(
+            model_name='hotpizzasuser',
+            name='location',
+            field=models.ForeignKey(related_name='user', to='core.Location'),
+            preserve_default=True,
+        ),
+        migrations.AddField(
+            model_name='hotpizzasuser',
+            name='user_permissions',
+            field=models.ManyToManyField(verbose_name='user permissions', related_name='user_set', blank=True, to='auth.Permission', related_query_name='user', help_text='Specific permissions for this user.'),
+            preserve_default=True,
+        ),
+    ]
