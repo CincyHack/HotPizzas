@@ -41,13 +41,7 @@ class ProductConfigurationViewSet(CreateModelMixin, ListModelMixin, RetrieveMode
 	serializer_class = ProductConfigurationSerializer
 
 
-class DriverViewSet(CreateModelMixin, ListModelMixin, RetrieveModelMixin, UpdateModelMixin, GenericViewSet):
-	queryset = HotPizzasUser.objects.filter(is_driver=True)
+class HotPizzasUserViewSet(CreateModelMixin, ListModelMixin, RetrieveModelMixin, UpdateModelMixin, GenericViewSet):
+	queryset = HotPizzasUser.objects.all()
 	serializer_class = HotPizzasUserSerializer
-	
-
-class CustomerViewSet(CreateModelMixin, ListModelMixin, RetrieveModelMixin, UpdateModelMixin, GenericViewSet):
-	queryset = HotPizzasUser.objects.filter(is_customer=True)
-	serializer_class = HotPizzasUserSerializer
-
 

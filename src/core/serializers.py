@@ -18,10 +18,18 @@ class LocationSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class HotPizzasUserSerializer(serializers.HyperlinkedModelSerializer):
-	
+
 	class Meta:
 		model = HotPizzasUser
-		
+
+
+class DriverSerializer(HotPizzasUserSerializer):
+	pass
+
+
+class CustomerSerializer(HotPizzasUserSerializer):
+	pass
+
 
 class ProductSerializer(serializers.HyperlinkedModelSerializer):
 

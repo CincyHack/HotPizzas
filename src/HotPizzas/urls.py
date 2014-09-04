@@ -5,8 +5,7 @@ from core.views import (
 	ProductViewSet,
 	ProductTypeViewSet,
 	ProductConfigurationViewSet,
-	DriverViewSet,
-	CustomerViewSet,
+	HotPizzasUserViewSet,
 	LocationViewSet,
 	LocalizedAvailableProductList,
 )
@@ -17,8 +16,7 @@ router = DefaultRouter()
 router.register(r'product', ProductViewSet)
 router.register(r'product_type', ProductTypeViewSet)
 router.register(r'product_configuration', ProductConfigurationViewSet)
-router.register(r'driver', DriverViewSet)
-router.register(r'customer', CustomerViewSet)
+router.register(r'user', HotPizzasUserViewSet)
 router.register(r'location', LocationViewSet)
 
 urlpatterns = patterns('',
