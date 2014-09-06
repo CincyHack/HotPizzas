@@ -1,6 +1,5 @@
 from .base import (
 	HotPizzasUser,
-	Location,
 )
 from .product import (
 	Product,
@@ -13,5 +12,4 @@ __all__ = [
 	'Product',
 	'ProductType',
 	'ProductConfiguration',
-	'Location',
 ]

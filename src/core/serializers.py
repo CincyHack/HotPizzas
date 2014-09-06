@@ -4,23 +4,21 @@ from .models import (
 	Product,
 	ProductType,
 	ProductConfiguration,
-	Location
 )
-
-class LocationSerializer(serializers.HyperlinkedModelSerializer):
-	
-	class Meta:
-		model = Location
-		fields = (
-			'longitude',
-			'latitude'
-		)
-
 
 class HotPizzasUserSerializer(serializers.HyperlinkedModelSerializer):
 
 	class Meta:
 		model = HotPizzasUser
+		fields = (
+			'url',
+			'is_customer',
+			'is_driver',
+			'phone_number',
+			'name',
+			'latitude',
+			'longitude',
+		)
 
 
 class DriverSerializer(HotPizzasUserSerializer):
@@ -33,8 +31,6 @@ class CustomerSerializer(HotPizzasUserSerializer):
 
 class ProductSerializer(serializers.HyperlinkedModelSerializer):
 
-	longitude = serializers.Field(source='location.longitude')
-	latitude = serializers.Field(source='location.latitude')
 	configurations= serializers.RelatedField(many=True)
 
 	class Meta:

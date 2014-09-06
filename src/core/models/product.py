@@ -1,6 +1,6 @@
 from django.db import models
 from django.core.exceptions import ValidationError
-from .base import HotPizzasUser, Location 
+from .base import HotPizzasUser
 
 
 class ProductType(models.Model):
@@ -37,10 +37,11 @@ class Product(models.Model):
 	product_type = models.ForeignKey(ProductType)
 	configurations = models.ManyToManyField(ProductConfiguration)
 	customer = models.ForeignKey(HotPizzasUser, null=True, blank=True, related_name='products-orders')
-	location = models.ForeignKey(Location, related_name='products')
 	driver = models.ForeignKey(HotPizzasUser, related_name='products-deliveries')
 	delivered = models.BooleanField(default=False)
 	request_time = models.DateTimeField(null=True, blank=True)
+	delivered_longitude = models.DecimalField(max_digits=10, decimal_places=5, null=True, blank=True)
+	delivered_latitude = models.DecimalField(max_digits=10, decimal_places=5, null=True, blank=True)
 	
 
 	def __str__(self):
