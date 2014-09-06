@@ -1,21 +1,34 @@
 #/usr/bin/env python
 
-from rest_framework import permissions
+from rest_framework.permissions import BasePermission
 
-class IsDriverOwnerOrCustomer(permissions.BasePermission):
+
+class UserCanSeeProduct(BasePermission):
 	
-	def has_object_permissions(self, request, view, object):
+	def has_object_permissions(self, request, view, obj):
+		return True
+
+
+class IsProductDriver(BasePermission):
+
+	def has_object_permissions(self, request, view, obj):
+		return obj.driver == request.user
+
+
+class IsPurchasingCustomer(BasePermission):
+	
+	def has_object_permissions(self, request, view, obj):
+		return (obj.customer == request.user) and (request.user != None)
+
+
+class UserIsInProductRange(BasePermission):
+	
+	def has_object_permissions(self, request, view, obj):
 		return True #FIXME
 
 
-class IsProductDriver(permissions.BasePermission):
-	pass
-
-
-class IsPurchasingCustomer(permissions.BasePermission):
-	pass
-
-
-class IsAuthenticatedOrReadOnly(permission.BasePermission):
-	pass
+class UserIsInDeliveryRange(BasePermission):
+	
+	def has_object_permissions(self, request, view, obj):
+		return True #FIXME
 

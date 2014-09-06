@@ -1,9 +1,8 @@
-from rest_framework.viewsets import GenericViewSet
-from rest_framework.mixins import (
-	CreateModelMixin,
-	ListModelMixin,
-	RetrieveModelMixin,
-	UpdateModelMixin,
+from rest_framework.permissions import (
+	IsAuthenticatedOrReadOnly,
+)
+from rest_framework.viewsets import (
+	ModelViewSet,
 )
 from ..models import (
 	HotPizzasUser,
@@ -19,29 +18,41 @@ from ..serializers import (
 	ProductConfigurationSerializer, 
 	LocationSerializer,
 )
+from ..permissions import (
+	UserCanSeeProduct,
+	IsProductDriver,
+	IsPurchasingCustomer,
+	UserIsInProductRange,
+	UserIsInDeliveryRange,
+)
 
 
-class LocationViewSet(CreateModelMixin, ListModelMixin, RetrieveModelMixin, UpdateModelMixin, GenericViewSet):
+class LocationViewSet(ModelViewSet):
 	queryset = Location.objects.all()
 	serializer_class = LocationSerializer
 
 
-class ProductViewSet(CreateModelMixin, ListModelMixin, RetrieveModelMixin, UpdateModelMixin, GenericViewSet):
+class ProductViewSet(ModelViewSet):
+	permission_classes = (
+		UserCanSeeProduct,
+		UserIsInProductRange,
+		UserIsInDeliveryRange,
+	)
 	queryset = Product.objects.all()
 	serializer_class = ProductSerializer
 
 
-class ProductTypeViewSet(CreateModelMixin, ListModelMixin, RetrieveModelMixin, UpdateModelMixin, GenericViewSet):
+class ProductTypeViewSet(ModelViewSet):
 	queryset = ProductType.objects.all()
 	serializer_class = ProductTypeSerializer
 
 
-class ProductConfigurationViewSet(CreateModelMixin, ListModelMixin, RetrieveModelMixin, UpdateModelMixin, GenericViewSet):
+class ProductConfigurationViewSet(ModelViewSet):
 	queryset = ProductConfiguration.objects.all()
 	serializer_class = ProductConfigurationSerializer
 
 
-class HotPizzasUserViewSet(CreateModelMixin, ListModelMixin, RetrieveModelMixin, UpdateModelMixin, GenericViewSet):
+class HotPizzasUserViewSet(ModelViewSet):
 	queryset = HotPizzasUser.objects.all()
 	serializer_class = HotPizzasUserSerializer
 

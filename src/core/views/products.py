@@ -1,11 +1,13 @@
 #!/usr/bin/env python
 from django.utils import timezone
-from rest_framework import generics
 from rest_framework.mixins import (
 	ListModelMixin
 )
-from rest_framework import views
-from rest_framework import status
+from rest_framework import (
+	views,
+	generics,
+	status,
+)
 from rest_framework.response import Response
 from ..serializers import ProductSerializer
 from ..models import Product, HotPizzasUser
