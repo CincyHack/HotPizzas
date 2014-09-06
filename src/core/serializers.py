@@ -58,7 +58,6 @@ class ProductTypeSerializer(serializers.HyperlinkedModelSerializer):
 		fields = (
 			'url',
 			'name',
-			'configurations',
 		)
 
 
@@ -69,6 +68,5 @@ class ProductConfigurationSerializer(serializers.HyperlinkedModelSerializer):
 		fields = (
 			'url',
 			'description',
-			'product_type'
 		)
 
