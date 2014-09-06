@@ -44,8 +44,8 @@ class ProductSerializer(serializers.HyperlinkedModelSerializer):
 			'request_time',
 			'customer',
 			'configurations',
-			'longitude',
-			'latitude',
+			'delivered_longitude',
+			'delivered_latitude',
 			'request_time',
 			'driver',
 		)

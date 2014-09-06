@@ -2,7 +2,6 @@ from .api import (
 	ProductViewSet,
 	ProductTypeViewSet,
 	ProductConfigurationViewSet,
-	LocationViewSet,
 	HotPizzasUserViewSet,
 )
 from .products import (
@@ -13,7 +12,6 @@ __all__ = [
 	'ProductViewSet',
 	'ProductTypeViewSet',
 	'ProductConfigurationViewSet',
-	'LocationViewSet',
 	'HotPizzasUserViewSet',
 	'LocalizedAvailableProductList',
 ]

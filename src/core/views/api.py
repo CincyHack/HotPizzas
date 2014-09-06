@@ -10,14 +10,12 @@ from ..models import (
 	Product,
 	ProductType,
 	ProductConfiguration,
-	Location,
 )
 from ..serializers import (
 	HotPizzasUserSerializer,
 	ProductSerializer,
 	ProductTypeSerializer,
 	ProductConfigurationSerializer, 
-	LocationSerializer,
 )
 from ..permissions import (
 	UserCanSeeProduct,
@@ -26,14 +24,6 @@ from ..permissions import (
 	UserIsInProductRange,
 	UserIsInDeliveryRange,
 )
-
-
-class LocationViewSet(ModelViewSet):
-	permission_classes = (
-		AllowAny,
-	)
-	queryset = Location.objects.all()
-	serializer_class = LocationSerializer
 
 
 class ProductViewSet(ModelViewSet):
