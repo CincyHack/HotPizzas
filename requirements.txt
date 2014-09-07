@@ -6,3 +6,4 @@ markdown
 djangorestframework
 django-oauth-toolkit
 djangorestframework-jwt
+python-social-auth

@@ -40,6 +40,7 @@ class Product(models.Model):
 	driver = models.ForeignKey(HotPizzasUser, related_name='products-deliveries')
 	delivered = models.BooleanField(default=False)
 	request_time = models.DateTimeField(null=True, blank=True)
+	deliverable_range = models.IntegerField(null=True, blank=True, default=10)
 	delivered_longitude = models.DecimalField(max_digits=10, decimal_places=5, null=True, blank=True)
 	delivered_latitude = models.DecimalField(max_digits=10, decimal_places=5, null=True, blank=True)
 	

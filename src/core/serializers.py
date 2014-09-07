@@ -31,11 +31,9 @@ class CustomerSerializer(HotPizzasUserSerializer):
 
 class ProductSerializer(serializers.HyperlinkedModelSerializer):
 
-	configurations= serializers.RelatedField(many=True)
-
 	class Meta:
 		model = Product
-		fields = (
+		"""fields = (
 			'url',
 			'cook_time',
 			'expiration_time',
@@ -48,25 +46,26 @@ class ProductSerializer(serializers.HyperlinkedModelSerializer):
 			'delivered_latitude',
 			'request_time',
 			'driver',
-		)
+			'product_type',
+		)"""
 
 
 class ProductTypeSerializer(serializers.HyperlinkedModelSerializer):	
 
 	class Meta:
 		model = ProductType
-		fields = (
+		"""fields = (
 			'url',
 			'name',
-		)
+		)"""
 
 
 class ProductConfigurationSerializer(serializers.HyperlinkedModelSerializer):
 
 	class Meta:
 		model = ProductConfiguration
-		fields = (
+		"""fields = (
 			'url',
 			'description',
-		)
+		)"""
 
