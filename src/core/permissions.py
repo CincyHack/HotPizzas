@@ -1,13 +1,18 @@
 #/usr/bin/env python
 
 from rest_framework.permissions import BasePermission
+from .include import get_coord_offsets
 
 
 class UserCanSeeProduct(BasePermission):
 	
 	def has_object_permissions(self, request, view, obj):
-		return True
-
+		if obj.customer == None:
+			return True #FIXME
+		elif obj.delivered == True:
+			return True #FIXME
+		else:
+			return True #FIXME: check if this is what we want to do
 
 class IsProductDriver(BasePermission):
 
@@ -28,7 +33,15 @@ class UserIsInProductRange(BasePermission):
 
 
 class UserIsInDeliveryRange(BasePermission):
-	
+	"""
+	This permission restricts the delivery field to drivers in range of the
+	purchasing customer only.
+	"""
 	def has_object_permissions(self, request, view, obj):
-		return True #FIXME
+		if request.method in ('DELETE', 'GET', 'HEAD', 'OPTIONS', 'POST'):
+			return True
+		if request.method in ('PATCH', 'PUT'):
+			return True #FIXME
+		else:
+			return False
 
