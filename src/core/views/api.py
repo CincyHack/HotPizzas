@@ -18,19 +18,13 @@ from ..serializers import (
 	ProductConfigurationSerializer, 
 )
 from ..permissions import (
-	UserCanSeeProduct,
-	IsProductDriver,
-	IsPurchasingCustomer,
-	UserIsInProductRange,
-	UserIsInDeliveryRange,
+	ProductComposedPermission
 )
 
 
 class ProductViewSet(ModelViewSet):
 	permission_classes = (
-		UserCanSeeProduct,
-		UserIsInProductRange,
-		UserIsInDeliveryRange,
+		AllowAny,
 	)
 	queryset = Product.objects.all()
 	serializer_class = ProductSerializer

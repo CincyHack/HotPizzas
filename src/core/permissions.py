@@ -1,7 +1,22 @@
 #/usr/bin/env python
 
 from rest_framework.permissions import BasePermission
+from restfw_composed_permissions.base import (
+	BaseComposedPermission,
+	And,
+	Or,
+	Not,
+)
 from .include import get_coord_offsets
+
+
+class ProductComposedPermission(BaseComposedPermission):
+
+	def has_permissions(self, request, view):
+		return False
+
+	def has_object_permissions(self, request, view, obj):
+		return True
 
 
 class UserCanSeeProduct(BasePermission):
