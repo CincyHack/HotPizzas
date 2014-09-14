@@ -1,7 +1,3 @@
-from rest_framework.permissions import (
-	AllowAny,
-	IsAuthenticatedOrReadOnly,
-)
 from rest_framework.viewsets import (
 	ModelViewSet,
 )
@@ -18,13 +14,16 @@ from ..serializers import (
 	ProductConfigurationSerializer, 
 )
 from ..permissions import (
-	ProductComposedPermission
+	ReadOnly,
+	IsAdminOrReadOnly,
+	ProductPermission,
+	UserPermission,
 )
 
 
 class ProductViewSet(ModelViewSet):
 	permission_classes = (
-		AllowAny,
+		ProductPermission,
 	)
 	queryset = Product.objects.all()
 	serializer_class = ProductSerializer
@@ -32,7 +31,7 @@ class ProductViewSet(ModelViewSet):
 
 class ProductTypeViewSet(ModelViewSet):
 	permission_classes = (
-		AllowAny,
+		ReadOnly,
 	)
 	queryset = ProductType.objects.all()
 	serializer_class = ProductTypeSerializer
@@ -40,7 +39,7 @@ class ProductTypeViewSet(ModelViewSet):
 
 class ProductConfigurationViewSet(ModelViewSet):
 	permission_classes = (
-		AllowAny,
+		ReadOnly,
 	)
 	queryset = ProductConfiguration.objects.all()
 	serializer_class = ProductConfigurationSerializer
@@ -48,7 +47,7 @@ class ProductConfigurationViewSet(ModelViewSet):
 
 class HotPizzasUserViewSet(ModelViewSet):
 	permission_classes = (
-		AllowAny,
+		UserPermission,
 	)
 	queryset = HotPizzasUser.objects.all()
 	serializer_class = HotPizzasUserSerializer

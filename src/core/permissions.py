@@ -1,62 +1,32 @@
 #/usr/bin/env python
-
-from rest_framework.permissions import BasePermission
-from restfw_composed_permissions.base import (
-	BaseComposedPermission,
-	And,
-	Or,
-	Not,
-)
+from rest_framework import BasePermission
 from .include import get_coord_offsets
 
 
-class ProductComposedPermission(BaseComposedPermission):
+class ProductPermission(BasePermission):
 
-	def has_permissions(self, request, view):
+	def has_pemissions(self, request, view):
+		"""This should be overwritten by object permissions"""
 		return False
 
-	def has_object_permissions(self, request, view, obj):
+	def has_object_permission(self, request, view, obj):
 		return True
 
 
-class UserCanSeeProduct(BasePermission):
+
+class UserPermission(BasePermission):
 	
-	def has_object_permissions(self, request, view, obj):
-		if obj.customer == None:
-			return True #FIXME
-		elif obj.delivered == True:
-			return True #FIXME
-		else:
-			return True #FIXME: check if this is what we want to do
+	def has_permission(self, request, view):
+		return False
 
-class IsProductDriver(BasePermission):
-
-	def has_object_permissions(self, request, view, obj):
-		return obj.driver == request.user
+	def has_object_permission(self, request, view, obj):
+		return True
 
 
-class IsPurchasingCustomer(BasePermission):
-	
-	def has_object_permissions(self, request, view, obj):
-		return (obj.customer == request.user) and (request.user != None)
+class ReadOnly(BasePermission):
 
+	def has_permission(self, request, view):
+		return False
 
-class UserIsInProductRange(BasePermission):
-	
-	def has_object_permissions(self, request, view, obj):
-		return True #FIXME
-
-
-class UserIsInDeliveryRange(BasePermission):
-	"""
-	This permission restricts the delivery field to drivers in range of the
-	purchasing customer only.
-	"""
-	def has_object_permissions(self, request, view, obj):
-		if request.method in ('DELETE', 'GET', 'HEAD', 'OPTIONS', 'POST'):
-			return True
-		if request.method in ('PATCH', 'PUT'):
-			return True #FIXME
-		else:
-			return False
-
+	def has_object_permission(self, request, view, obj):
+		return True
