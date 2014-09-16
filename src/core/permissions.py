@@ -58,23 +58,23 @@ class CustomerPermissionMixin(object):
 		pass #TODO
 
 
-class ProductPermission(BasePermission):
+class ProductPermission(SafeHTTPPermissionMixin, BasePermission):
 
 	def has_pemissions(self, request, view):
 		"""This should be overwritten by object permissions"""
 		return False
 
 	def has_object_permission(self, request, view, obj):
-		return True
+		return self.is_safe(request)
 
 
-class UserPermission(BasePermission):
+class UserPermission(SafeHTTPPermissionMixin, BasePermission):
 	
 	def has_permission(self, request, view):
 		return False
 
 	def has_object_permission(self, request, view, obj):
-		return True
+		return self.is_safe(request)
 
 
 class ReadOnly(SafeHTTPPermissionMixin, BasePermission):
