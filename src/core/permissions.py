@@ -69,7 +69,7 @@ class RetrievePermissionMixin(GetPermissionMixin):
 
 class PartialUpdatePermissionMixin(PatchPermissionMixin):
 	"""CRUD/REST macro to HTTP"""
-	def is_partial_update(self, request): 
+	def is_partial_update(self, request):
 		return self.is_patch(request)
 
 
