@@ -1,6 +1,9 @@
 from rest_framework.viewsets import (
 	ModelViewSet,
 )
+from rest_framework.filters import (
+	DjangoObjectPermissionsFilter,
+)
 from ..models import (
 	HotPizzasUser,
 	Product,
@@ -15,7 +18,6 @@ from ..serializers import (
 )
 from ..permissions import (
 	ReadOnly,
-	IsAdminOrReadOnly,
 	ProductPermission,
 	UserPermission,
 )
@@ -25,8 +27,26 @@ class ProductViewSet(ModelViewSet):
 	permission_classes = (
 		ProductPermission,
 	)
+	filter_backends = (
+		DjangoObjectPermissionsFilter,
+	)
 	queryset = Product.objects.all()
 	serializer_class = ProductSerializer
+
+	def buy(self, request, *args, **kwargs):
+		pass
+
+	def deliver(self, request, *args, **kwargs):
+		pass
+
+	def update(self, request, *args **kwargs):
+		super().update(request, *args, **kwargs)
+
+	def create(self, request, *args, **kwargs):
+		super().create(request, *args, **kwargs)
+
+	def delete(self, request, *args, **kwargs):
+		super().delete(request, *args, **kwargs)
 
 
 class ProductTypeViewSet(ModelViewSet):
@@ -45,10 +65,23 @@ class ProductConfigurationViewSet(ModelViewSet):
 	serializer_class = ProductConfigurationSerializer
 
 
+
 class HotPizzasUserViewSet(ModelViewSet):
 	permission_classes = (
 		UserPermission,
 	)
+	filter_backends = (
+		DjangoObjectPermissionsFilter,
+	)
 	queryset = HotPizzasUser.objects.all()
 	serializer_class = HotPizzasUserSerializer
+	
+	def update(self, request, *args, **kwargs):
+		super().update(request, *args, **kwargs)
 
+	def create(self, request, *args, **kwargs):
+		super().create(request, *args, **kwargs)
+
+	def delete(self, request, *args, **kwargs):
+		super().delete(request, *args, **kwargs)
+	

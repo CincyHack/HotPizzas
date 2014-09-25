@@ -21,5 +21,6 @@ urlpatterns = patterns('',
 	url(r'^admin/', include(admin.site.urls)),
 	url(r'^oauth/', include('oauth2_provider.urls', namespace='oauth2_provider')),
 	url(r'^token/$', 'rest_framework_jwt.views.obtain_jwt_token'),
+	url(r'^login/', 'django.contrib.auth.views.login', {'template_name': 'admin/login.html'}),
 )
 

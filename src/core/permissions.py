@@ -1,5 +1,8 @@
 #/usr/bin/env python
-from rest_framework import BasePermission
+from rest_framework.permissions import (
+	BasePermission,
+	DjangoObjectPermissions,
+)
 from .include import get_coord_offsets
 from .models import Product
 
@@ -19,13 +22,13 @@ class GetPermissionMixin(object):
 class PatchPermissionMixin(object):
 
 	def is_patch(self, request):
-		return request.method = 'PATCH'
+		return request.method == 'PATCH'
 
 
 class PostPermissionMixin(object):
 
 	def is_post(self, request):
-		return requst.method == 'POST'
+		return request.method == 'POST'
 
 
 class PutPermissionMixin(object):
@@ -54,22 +57,26 @@ class HTTPPermissionMixin(
 
 class CreatePermissionMixin(PostPermissionMixin):
 	"""CRUD/REST macro to HTTP"""
-	self.is_create = self.is_post
+	def is_create(self, request):
+		return self.is_post(request)
 
 
 class RetrievePermissionMixin(GetPermissionMixin):
 	"""CRUD/REST macro to HTTP"""
-	self.is_retrieve = self.is_get
+	def is_retrieve(self, request):
+		return self.is_get(request)
 
 
 class PartialUpdatePermissionMixin(PatchPermissionMixin):
 	"""CRUD/REST macro to HTTP"""
-	self.is_partial_update = self.is_patch
+	def is_partial_update(self, request): 
+		return self.is_patch(request)
 
 
 class FullUpdatePermissionMixin(PutPermissionMixin):
 	"""CRUD/REST macro to HTTP"""
-	self.is_full_update = self.is_put
+	def is_full_update(self, request):
+		return  self.is_put(request)
 
 
 class UpdatePermissionMixin(PartialUpdatePermissionMixin, FullUpdatePermissionMixin):
@@ -80,7 +87,8 @@ class UpdatePermissionMixin(PartialUpdatePermissionMixin, FullUpdatePermissionMi
 
 class DestroyPermissionMixin(DeletePermissionMixin):
 	"""CRUD/REST macro to HTTP"""
-	self.is_destroy = self.destroy
+	def is_destroy(self, request):
+		return self.is_delete(request)
 
 
 class RESTPermissionMixin(
@@ -109,7 +117,7 @@ class DriverPermissionMixin(object):
 
 	def is_product_driver(self, request, obj):
 		if self.is_driver(request):
-			if isinstance(obj, Product)
+			if isinstance(obj, Product):
 				return request.user == obj.driver
 			else:
 				return False
@@ -137,10 +145,16 @@ class CustomerPermissionMixin(object):
 
 class ProductPermission(RESTPermissionMixin, BasePermission):
 
-	def has_pemissions(self, request, view):
-		"""This should be overwritten by object permissions"""
-		return False
-
+	perms_map = {
+		'GET': ['%(app_label)s.view_%(model_name)s'],
+		'OPTIONS': ['%(app_label)s.view_%(model_name)s'],
+		'HEAD': ['%(app_label)s.view_%(model_name)s'],
+		'POST': ['%(app_label)s.add_%(model_name)s'],
+		'PUT': ['%(app_label)s.change_%(model_name)s'],
+		'PATCH': ['%(app_label)s.change_%(model_name)s'],
+		'DELETE': ['%(app_label)s.delete_%(model_name)s'],
+	}
+"""
 	def has_object_permission(self, request, view, obj):
 		if self.is_create(request):
 			return True
@@ -154,14 +168,21 @@ class ProductPermission(RESTPermissionMixin, BasePermission):
 			return True
 		else:
 			return False
+"""
 
 
-class UserPermission(RESTPermissionMixin, DriverPermissionMixin, BasePermission):
-	
-	def has_permission(self, request, view):
-		"""This should be overwritten by object permissions"""
-		return False
+class UserPermission(RESTPermissionMixin, DriverPermissionMixin, DjangoObjectPermissions):
 
+	perms_map = {
+		'GET': ['%(app_label)s.view_%(model_name)s'],
+		'OPTIONS': ['%(app_label)s.view_%(model_name)s'],
+		'HEAD': ['%(app_label)s.view_%(model_name)s'],
+		'POST': ['%(app_label)s.add_%(model_name)s'],
+		'PUT': ['%(app_label)s.change_%(model_name)s'],
+		'PATCH': ['%(app_label)s.change_%(model_name)s'],
+		'DELETE': ['%(app_label)s.delete_%(model_name)s'],
+	}
+"""
 	def has_object_permission(self, request, view, obj):
 		if self.is_create(request):
 			return True
@@ -175,12 +196,13 @@ class UserPermission(RESTPermissionMixin, DriverPermissionMixin, BasePermission)
 			return True
 		else:
 			return False
+"""
 
 
 class ReadOnly(SafeHTTPPermissionMixin, BasePermission):
 
 	def has_permission(self, request, view):
-		return False
+		return self.is_safe(request)
 
 	def has_object_permission(self, request, view, obj):
 		return self.is_safe(request)

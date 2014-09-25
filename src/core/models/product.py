@@ -54,7 +54,7 @@ class Product(models.Model):
 
 		if not self.driver.is_driver:
 			is_error = True
-			err_str.append("Product driver user must be a driver")
+			err_str.append("Product must have driver and driver user must be a driver")
 
 		if self.customer and not self.customer.is_customer:
 			is_error = True
@@ -62,4 +62,5 @@ class Product(models.Model):
 
 		if is_error:
 			raise ValidationError((", ".join(err_str) + "."))
+
 

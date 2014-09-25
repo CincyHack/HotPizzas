@@ -6,6 +6,9 @@ class HotPizzasUser(AbstractUser):
 
 	class Meta:
 		app_label = "core"
+		permissions = (
+			('view_hotpizzasuser', 'view hot pizzas user'),
+		)
 
 	is_customer = models.BooleanField(default=True)
 	is_driver = models.BooleanField(default=False)
