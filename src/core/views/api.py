@@ -39,14 +39,14 @@ class ProductViewSet(ModelViewSet):
 	def deliver(self, request, *args, **kwargs):
 		pass
 
-	def update(self, request, *args **kwargs):
-		super().update(request, *args, **kwargs)
+	def update(self, request, *args, **kwargs):
+		return super().update(request, *args, **kwargs)
 
 	def create(self, request, *args, **kwargs):
-		super().create(request, *args, **kwargs)
+		return super().create(request, *args, **kwargs)
 
 	def delete(self, request, *args, **kwargs):
-		super().delete(request, *args, **kwargs)
+		return super().delete(request, *args, **kwargs)
 
 
 class ProductTypeViewSet(ModelViewSet):
@@ -77,11 +77,11 @@ class HotPizzasUserViewSet(ModelViewSet):
 	serializer_class = HotPizzasUserSerializer
 	
 	def update(self, request, *args, **kwargs):
-		super().update(request, *args, **kwargs)
+		return super().update(request, *args, **kwargs)
 
 	def create(self, request, *args, **kwargs):
-		super().create(request, *args, **kwargs)
+		return super().create(request, *args, **kwargs)
 
 	def delete(self, request, *args, **kwargs):
-		super().delete(request, *args, **kwargs)
+		return super().delete(request, *args, **kwargs)
 	
