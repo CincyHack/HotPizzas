@@ -4,6 +4,9 @@ from rest_framework.viewsets import (
 from rest_framework.filters import (
 	DjangoObjectPermissionsFilter,
 )
+from rest_framework.permissions import (
+	AllowAny
+)
 from ..models import (
 	HotPizzasUser,
 	Product,
@@ -27,9 +30,9 @@ class ProductViewSet(ModelViewSet):
 	permission_classes = (
 		ProductPermission,
 	)
-	filter_backends = (
+	"""filter_backends = (
 		DjangoObjectPermissionsFilter,
-	)
+	)"""
 	queryset = Product.objects.all()
 	serializer_class = ProductSerializer
 

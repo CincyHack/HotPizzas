@@ -30,6 +30,9 @@ class Product(models.Model):
 	
 	class Meta:
 		app_label = "core"
+		permissions = (
+			('view_product', 'view product'),
+		)
 
 	cook_time = models.DateTimeField()
 	expiration_time = models.DateTimeField()
