@@ -10,7 +10,8 @@ class HotPizzasUser(AbstractUser):
 			('view_hotpizzasuser', 'view hot pizzas user'),
 		)
 
-	is_customer = models.BooleanField(default=True)
+	#30 sep 2014 - FIXME: removed customer model for anon-first
+	#is_customer = models.BooleanField(default=True)
 	is_driver = models.BooleanField(default=False)
 	phone_number = models.CharField(max_length=15)
 	name = models.CharField(max_length=100)
