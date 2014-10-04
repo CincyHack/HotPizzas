@@ -1,11 +1,15 @@
 from rest_framework.viewsets import (
+	GenericViewSet,
 	ModelViewSet,
 )
 from rest_framework.filters import (
 	DjangoObjectPermissionsFilter,
 )
 from rest_framework.permissions import (
-	AllowAny
+	AllowAny,
+)
+from rest_framework.response import (
+	Response,
 )
 from ..models import (
 	HotPizzasUser,
@@ -18,12 +22,31 @@ from ..serializers import (
 	ProductSerializer,
 	ProductTypeSerializer,
 	ProductConfigurationSerializer, 
+	UniqueProductSerializer,
 )
 from ..permissions import (
 	ReadOnly,
 	ProductPermission,
 	UserPermission,
 )
+
+
+class UniqueProductViewSet(GenericViewSet):
+	queryset = Product.objects.all()
+	serializer_class = UniqueProductSerializer
+
+	def list(self, request):
+		serializer = self.serializer_class(self.queryset, many=True)
+		return Response(serializer.data)
+
+	def create(self, request):
+		return Response([])
+
+	def retrieve(self, request, pk=None):
+		return Response([])
+
+	def update(self, request, pk=None):
+		return Response([])
 
 
 class ProductViewSet(ModelViewSet):

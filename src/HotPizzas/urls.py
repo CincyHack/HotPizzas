@@ -6,6 +6,7 @@ from core.views import (
 	ProductTypeViewSet,
 	ProductConfigurationViewSet,
 	HotPizzasUserViewSet,
+	UniqueProductViewSet,
 )
 from rest_framework.routers import DefaultRouter
 admin.autodiscover()
@@ -15,6 +16,7 @@ router.register(r'product', ProductViewSet)
 router.register(r'product_type', ProductTypeViewSet)
 router.register(r'product_configuration', ProductConfigurationViewSet)
 router.register(r'user', HotPizzasUserViewSet)
+router.register(r'unique', UniqueProductViewSet, 'unique')
 
 urlpatterns = patterns('',
 	url(r'^api/', include(router.urls)),

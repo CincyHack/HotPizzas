@@ -42,6 +42,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+	'corsheaders',
     'rest_framework',
     'core',
     'oauth2_provider',
@@ -50,6 +51,7 @@ INSTALLED_APPS = (
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
+	'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -67,6 +69,12 @@ ANONYMOUS_USER_ID = -1
 ROOT_URLCONF = 'HotPizzas.urls'
 
 WSGI_APPLICATION = 'HotPizzas.wsgi.application'
+
+# CORS stuff
+CORS_ORIGIN_ALLOW_ALL = True #FIXME
+CORS_ORIGIN_WHITELIST = (
+        'pepperonio.com',
+)
 
 
 # Database

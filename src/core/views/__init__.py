@@ -3,9 +3,7 @@ from .api import (
 	ProductTypeViewSet,
 	ProductConfigurationViewSet,
 	HotPizzasUserViewSet,
-)
-from .products import (
-	LocalizedAvailableProductList
+	UniqueProductViewSet,
 )
 
 __all__ = [
@@ -13,5 +11,5 @@ __all__ = [
 	'ProductTypeViewSet',
 	'ProductConfigurationViewSet',
 	'HotPizzasUserViewSet',
-	'LocalizedAvailableProductList',
+	'UniqueProductViewSet',
 ]

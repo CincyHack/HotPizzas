@@ -50,6 +50,17 @@ class ProductSerializer(serializers.HyperlinkedModelSerializer):
 		)"""
 
 
+class UniqueProductSerializer(serializers.Serializer):
+	product_type = serializers.Field(source='product_type.name')
+	configurations = serializers.SlugRelatedField(many=True, read_only=True, slug_field='description')
+
+	class Meta:
+		model = Product
+		fields = (
+			'product_type',
+			'configurations',
+		)
+
 class ProductTypeSerializer(serializers.HyperlinkedModelSerializer):	
 
 	class Meta:
