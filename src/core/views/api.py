@@ -32,6 +32,9 @@ from ..permissions import (
 
 
 class UniqueProductViewSet(GenericViewSet):
+	permission_classes = (
+		AllowAny,
+	)	
 	queryset = Product.objects.all()
 	serializer_class = UniqueProductSerializer
 
@@ -43,7 +46,22 @@ class UniqueProductViewSet(GenericViewSet):
 		return Response([])
 
 	def retrieve(self, request, pk=None):
-		return Response([])
+		
+		if pk:
+			#FIXME: handle malformed strings, excessive configurations, etc - may need to do model work
+			search_terms = pk.split("-")
+			product_type = search_terms[0]
+			configurations = search_terms[1:]
+			#TODO: make sure to filter unclaimed, unpurchased
+			query = Product.objects.filter(product_type__name=product_type)
+			query.filter(configurations__description__in=configurations)
+			queryset = query.first()
+			serializer = self.serializer_class(queryset)
+			return Response(serializer.data)
+		
+		else:
+			return Response([]) #FIXME consider returning a 404 or some error
+
 
 	def update(self, request, pk=None):
 		return Response([])
