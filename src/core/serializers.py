@@ -51,10 +51,9 @@ class ProductSerializer(serializers.HyperlinkedModelSerializer):
 		)"""
 
 
-class UniqueProductSerializer(serializers.Serializer):
+class UniqueProductSerializer(serializers.ModelSerializer):
 	product_type = serializers.Field(source='product_type.name')
 	configurations = serializers.SlugRelatedField(many=True, read_only=True, slug_field='description')
-	base_price = serializers.DecimalField(source='base_price')
 	url = serializers.SerializerMethodField('get_unique_url')
 
 	def get_unique_url(self, obj):

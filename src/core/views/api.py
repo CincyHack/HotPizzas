@@ -42,8 +42,6 @@ class UniqueProductViewSet(GenericViewSet):
 		serializer = self.serializer_class(self.queryset, many=True)
 		return Response(serializer.data)
 
-	def create(self, request):
-		return Response([])
 
 	def retrieve(self, request, pk=None):
 		
@@ -52,11 +50,17 @@ class UniqueProductViewSet(GenericViewSet):
 			search_terms = pk.split("-")
 			product_type = search_terms[0]
 			configurations = search_terms[1:]
+
+			if len(configurations) > 5:
+				return Response([]) #FIXME: send a failure for too many terms
+
 			#TODO: make sure to filter unclaimed, unpurchased
-			query = Product.objects.filter(product_type__name=product_type)
-			query.filter(configurations__description__in=configurations)
-			queryset = query.first()
-			serializer = self.serializer_class(queryset)
+			queryset = Product.objects.filter(product_type__name=product_type)
+
+			for configuration in configurations:
+				queryset.filter(configurations__description=configuration)
+
+			serializer = self.serializer_class(queryset, many=True)
 			return Response(serializer.data)
 		
 		else:
