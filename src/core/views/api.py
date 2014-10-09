@@ -1,3 +1,4 @@
+from rest_framework import status
 from rest_framework.viewsets import (
 	GenericViewSet,
 	ModelViewSet,
@@ -33,8 +34,9 @@ from ..permissions import (
 
 class UniqueProductViewSet(GenericViewSet):
 	permission_classes = (
-		AllowAny,
-	)	
+		ProductPermission,
+	)
+	"""filter_backends = (DjangoObjectPermissionsFilter)"""
 	queryset = Product.objects.all()
 	serializer_class = UniqueProductSerializer
 
@@ -50,22 +52,21 @@ class UniqueProductViewSet(GenericViewSet):
 			search_terms = pk.split("-")
 			product_type = search_terms[0]
 			configurations = search_terms[1:]
-			print(configurations)
+			filter_thresh = 5
 
-			if len(configurations) > 5:
-				return Response([]) #FIXME: send a failure for too many terms
+			# Flag for 206 partial content return. 5 is arbitrary long call
+			status = status.HTTP_200_OK if (len(configurations) < filter_thresh) else status.HTTP_206_PARTIAL_CONTENT
 
-			#TODO: make sure to filter unclaimed, unpurchased
 			queryset = Product.objects.filter(product_type__name=product_type)
 
-			for configuration in configurations:
+			for configuration in configurations[:filter_thresh]:
 				queryset = queryset.filter(configurations__description=configuration)
 
 			serializer = self.serializer_class(queryset, many=True)
-			return Response(serializer.data)
+			return Response(serializer.data, status=status)
 		
 		else:
-			return Response([]) #FIXME consider returning a 404 or some error
+			return Response([], status=status.HTTP_204_NO_CONTENT)
 
 
 	def update(self, request, pk=None):
@@ -77,9 +78,7 @@ class ProductViewSet(ModelViewSet):
 	permission_classes = (
 		ProductPermission,
 	)
-	"""filter_backends = (
-		DjangoObjectPermissionsFilter,
-	)"""
+	"""filter_backends = (DjangoObjectPermissionsFilter)"""
 	queryset = Product.objects.all()
 	serializer_class = ProductSerializer
 
