@@ -69,7 +69,8 @@ class UniqueProductViewSet(GenericViewSet):
 
 
 	def update(self, request, pk=None):
-		return Response([])
+		product_url = ""
+		return Response({"purchased_product": product_url})
 
 
 class ProductViewSet(ModelViewSet):
