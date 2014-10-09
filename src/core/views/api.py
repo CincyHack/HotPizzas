@@ -50,6 +50,7 @@ class UniqueProductViewSet(GenericViewSet):
 			search_terms = pk.split("-")
 			product_type = search_terms[0]
 			configurations = search_terms[1:]
+			print(configurations)
 
 			if len(configurations) > 5:
 				return Response([]) #FIXME: send a failure for too many terms
@@ -58,7 +59,7 @@ class UniqueProductViewSet(GenericViewSet):
 			queryset = Product.objects.filter(product_type__name=product_type)
 
 			for configuration in configurations:
-				queryset.filter(configurations__description=configuration)
+				queryset = queryset.filter(configurations__description=configuration)
 
 			serializer = self.serializer_class(queryset, many=True)
 			return Response(serializer.data)
