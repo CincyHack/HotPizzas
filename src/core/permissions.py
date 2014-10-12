@@ -170,7 +170,6 @@ class ProductPermission(RESTPermissionMixin, DriverPermissionMixin, BasePermissi
 			return False
 
 
-
 class UserPermission(RESTPermissionMixin, DriverPermissionMixin, DjangoObjectPermissions):
 
 	perms_map = {

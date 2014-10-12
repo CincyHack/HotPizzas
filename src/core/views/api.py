@@ -77,7 +77,6 @@ class UniqueProductViewSet(GenericViewSet):
 
 
 	def update(self, request, pk=None):
-
 		if pk:
 			(queryset, status) = self.get_filtered_set(request, pk)
 			queryset = queryset.first()
