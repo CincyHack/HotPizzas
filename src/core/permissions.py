@@ -143,7 +143,7 @@ class CustomerPermissionMixin(object):
 			return False
 
 
-class ProductPermission(RESTPermissionMixin, BasePermission):
+class ProductPermission(RESTPermissionMixin, DriverPermissionMixin, BasePermission):
 
 	perms_map = {
 		'GET': ['%(app_label)s.view_%(model_name)s'],
@@ -154,10 +154,10 @@ class ProductPermission(RESTPermissionMixin, BasePermission):
 		'PATCH': ['%(app_label)s.change_%(model_name)s'],
 		'DELETE': ['%(app_label)s.delete_%(model_name)s'],
 	}
-"""
+
 	def has_object_permission(self, request, view, obj):
 		if self.is_create(request):
-			return True
+			return self.is_driver(request)
 		elif self.is_retrieve(request):
 			return True #FIXME: this is leaky, especially for purchased products
 		elif self.is_update(request):
@@ -165,10 +165,10 @@ class ProductPermission(RESTPermissionMixin, BasePermission):
 		elif self.is_destroy(request):
 			return False #FIXME: drivers should be able to remove an incorrect pizza
 		elif self.is_safe(request):
-			return True
+			return True #FIXME: this is leaky too
 		else:
 			return False
-"""
+
 
 
 class UserPermission(RESTPermissionMixin, DriverPermissionMixin, DjangoObjectPermissions):
