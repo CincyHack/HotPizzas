@@ -155,17 +155,35 @@ class ProductPermission(RESTPermissionMixin, DriverPermissionMixin, BasePermissi
 		'DELETE': ['%(app_label)s.delete_%(model_name)s'],
 	}
 
+	def is_purchased(self, request, obj):
+		if isinstance(obj, Product):
+			return obj.purchased
+		else:
+			return False
+
+
+	def is_delivered(self, request, obj):
+		if isinstance(obj, Product):
+			return obj.delivered
+		else:
+			return False
+
+
 	def has_object_permission(self, request, view, obj):
 		if self.is_create(request):
 			return self.is_driver(request)
 		elif self.is_retrieve(request):
-			return True #FIXME: this is leaky, especially for purchased products
+			if self.is_product_driver(request, obj):
+				return not self.is_delivered(request, obj)
+			else:
+				return not self.is_purchased(request, obj)
+
 		elif self.is_update(request):
 			return False #FIXME: users should be able to update products to purchase, drivers should be able to fix pizza
 		elif self.is_destroy(request):
 			return False #FIXME: drivers should be able to remove an incorrect pizza
 		elif self.is_safe(request):
-			return True #FIXME: this is leaky too
+			return False #FIXME: this is leaky too
 		else:
 			return False
 

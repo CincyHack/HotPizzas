@@ -13,7 +13,6 @@ class HotPizzasUserSerializer(serializers.HyperlinkedModelSerializer):
 		model = HotPizzasUser
 		fields = (
 			'url',
-			'is_customer',
 			'is_driver',
 			'phone_number',
 			'name',

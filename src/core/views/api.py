@@ -114,6 +114,12 @@ class ProductViewSet(ModelViewSet):
 	def delete(self, request, *args, **kwargs):
 		return super().delete(request, *args, **kwargs)
 
+	def list(self, request, *args, **kwargs):
+		return super().list(request, *args, **kwargs)
+
+	def retrieve(self, request, *args, **kwargs):
+		return super().retrieve(request, *args, **kwargs)
+
 
 class ProductTypeViewSet(ModelViewSet):
 	permission_classes = (

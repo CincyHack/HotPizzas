@@ -71,7 +71,7 @@ class Product(models.Model):
 		#	is_error = True
 		#	err_str.append("Product customer user must be a customer")
 		purchase_fields = [
-			self.is_purchased,
+			self.purchased,
 			self.customer_phone_number,
 			self.customer_latitude,
 			self.customer_longitude,
@@ -79,19 +79,19 @@ class Product(models.Model):
 		]
 
 		if any(purchase_fields) and not all(purchase_fields):
-			if not self.customer_phone_number:
+			if self.customer_phone_number in [None, '']:
 				is_error = True
 				err_str.append("Product must have a customer phone number to be purchased")
 			
-			if not self.customer_latitude:
+			if self.customer_latitude == None:
 				is_error = True
 				err_str.append("Product must have a customer latitude to be purchased")
 
-			if not self.customer_longitude:
+			if self.customer_longitude == None:
 				is_error = True
 				err_str.append("Product must have a customer longitude to be purchased")
 
-			if not self.customer_name:
+			if self.customer_name in [None, '']:
 				is_error = True
 				err_str.append("Product must have a customer name to be purchased")
 
