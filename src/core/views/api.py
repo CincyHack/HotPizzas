@@ -37,12 +37,19 @@ class UniqueProductViewSet(GenericViewSet):
 		ProductPermission,
 	)
 	"""filter_backends = (DjangoObjectPermissionsFilter)"""
-	queryset = Product.objects.all()
+	base_name = "Unique"
 	serializer_class = UniqueProductSerializer
 
+
+	def get_queryset(self):
+		return Product.objects.all()
+
+
 	def list(self, request):
-		serializer = self.serializer_class(self.queryset, many=True)
-		return Response(serializer.data)
+		(queryset, status) = self.get_filtered_set(request)
+		serializer = self.serializer_class(queryset, many=True)	
+
+		return Response(serializer.data, status=status)
 
 
 	def get_filtered_set(self, request, pk=None):
@@ -54,14 +61,19 @@ class UniqueProductViewSet(GenericViewSet):
 			filter_thresh = 5
 
 			# Flag for 206 partial content return. 5 is arbitrary long call
-			status = status.HTTP_200_OK if (len(configurations) < filter_thresh) else status.HTTP_206_PARTIAL_CONTENT
+			ret_status = status.HTTP_200_OK if (len(configurations) < filter_thresh) else status.HTTP_206_PARTIAL_CONTENT
 
 			queryset = Product.objects.filter(product_type__name=product_type)
 
 			for configuration in configurations[:filter_thresh]:
 				queryset = queryset.filter(configurations__description=configuration)
-				
-			return (queryset, status)
+
+		else:
+			#FIXME: this is all messed up because distinct doesn't give an f about m2m
+			queryset = Product.objects.order_by('product_type', 'base_price', 'configurations').distinct('product_type', 'base_price', 'configurations')
+			ret_status = status.HTTP_200_OK
+
+		return (queryset, ret_status)
 
 
 	def retrieve(self, request, pk=None):
@@ -101,10 +113,16 @@ class ProductViewSet(ModelViewSet):
 
 	def get_queryset(self):
 		user = self.request.user
-		if not user.is_anonymous() and user.is_driver:
+		if user.is_authenticated() and user.is_superuser:
+			return Product.objects.filter(delivered=False)
+		elif user.is_authenticated() and user.is_driver:
 			return Product.objects.filter(delivered=False, driver=user)
 		else:
-			return Product.objects.filter(delivered=False) 
+			if 'sessionid' in self.request.COOKIES:
+				sessionid = self.request.COOKIES.get('sessionid')
+				return Product.objects.filter(delivered=False, purchased=False) #FIXME: query by sessionid
+			else:
+				return Product.objects.filter(delivered=False, purchased=False) 
 
 	def buy(self, request, *args, **kwargs):
 		pass
@@ -122,7 +140,11 @@ class ProductViewSet(ModelViewSet):
 		return super().delete(request, *args, **kwargs)
 
 	def list(self, request, *args, **kwargs):
-		return super().list(request, *args, **kwargs)
+		if request.user.is_authenticated()  and request.user.is_superuser:
+			return super().list(request, *args, **kwargs)
+		else:
+			return Response({"error": "List view not allowed, use /unique/"}, status=status.HTTP_403_FORBIDDEN)
+			
 
 	def retrieve(self, request, *args, **kwargs):
 		return super().retrieve(request, *args, **kwargs)

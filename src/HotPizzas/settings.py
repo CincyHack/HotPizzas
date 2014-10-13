@@ -70,15 +70,17 @@ ROOT_URLCONF = 'HotPizzas.urls'
 
 WSGI_APPLICATION = 'HotPizzas.wsgi.application'
 
-# CORS stuff
+# CORS
 CORS_ORIGIN_ALLOW_ALL = True #FIXME
 CORS_ORIGIN_WHITELIST = (
         'pepperonio.com',
 )
 
+#Session
+SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'
+SESSION_SAVE_EVERY_REQUEST = True
 
 # Database
-# https://docs.djangoproject.com/en/1.6/ref/settings/#databases
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -92,7 +94,6 @@ DATABASES = {
 
 
 # Internationalization
-# https://docs.djangoproject.com/en/1.6/topics/i18n/
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_I18N = True
@@ -101,7 +102,6 @@ USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.6/howto/static-files/
 STATIC_URL = '/static/'
 LOGIN_REDIRECT_URL = "/"
 LOGIN_URL="/login/"
@@ -121,7 +121,6 @@ OAUTH2_PROVIDER = {
 
 
 # Django REST Framework settings
-
 REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': (
         'rest_framework.renderers.UnicodeJSONRenderer',

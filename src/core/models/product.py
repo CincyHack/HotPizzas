@@ -42,6 +42,7 @@ class Product(models.Model):
 	#30 sep 2014 - FIXME: remove customer for anon-first
 	#customer = models.ForeignKey(HotPizzasUser, null=True, blank=True, related_name='products-orders')
 	purchased = models.BooleanField(default=False)
+	customer_sessionid = models.CharField(max_length=32, null=True, blank=True)
 	customer_phone_number = models.CharField(max_length=15, null=True, blank=True)
 	customer_longitude = models.DecimalField(max_digits=10, decimal_places=5, null=True, blank=True)
 	customer_latitude = models.DecimalField(max_digits=10, decimal_places=5, null=True, blank=True)
