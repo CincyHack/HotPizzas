@@ -96,8 +96,15 @@ class ProductViewSet(ModelViewSet):
 		ProductPermission,
 	)
 	"""filter_backends = (DjangoObjectPermissionsFilter)"""
-	queryset = Product.objects.all()
 	serializer_class = ProductSerializer
+	model = Product
+
+	def get_queryset(self):
+		user = self.request.user
+		if not user.is_anonymous() and user.is_driver:
+			return Product.objects.filter(delivered=False, driver=user)
+		else:
+			return Product.objects.filter(delivered=False) 
 
 	def buy(self, request, *args, **kwargs):
 		pass
