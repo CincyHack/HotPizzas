@@ -64,13 +64,35 @@ class UniqueProductViewSet(GenericViewSet):
 			ret_status = status.HTTP_200_OK if (len(configurations) < filter_thresh) else status.HTTP_206_PARTIAL_CONTENT
 
 			queryset = Product.objects.filter(product_type__name=product_type)
+			queryset = queryset.filter(purchased=False)
 
 			for configuration in configurations[:filter_thresh]:
 				queryset = queryset.filter(configurations__description=configuration)
 
 		else:
-			#FIXME: this is all messed up because distinct doesn't give an f about m2m
+			#WARNING: this doesn't do what it looks like it does, but we try to do that below in a high complexity search
 			queryset = Product.objects.order_by('product_type', 'base_price', 'configurations').distinct('product_type', 'base_price', 'configurations')
+			queryset = queryset.filter(purchased=False)
+			filtered_queryset = list()
+			
+			#FIXME: this is not sustainable
+			for insert in queryset:
+				if len(filtered_queryset) == 0:
+					filtered_queryset.append(insert)
+				else:
+					exists = False
+					for existing in filtered_queryset:
+						if insert.base_price == existing.base_price and \
+						insert.product_type == existing.product_type and \
+						set(insert.configurations.all()) == set(existing.configurations.all()):
+							exists = True
+							break
+						
+					if not exists:
+						filtered_queryset.append(insert)
+
+
+			queryset = filtered_queryset
 			ret_status = status.HTTP_200_OK
 
 		return (queryset, ret_status)
