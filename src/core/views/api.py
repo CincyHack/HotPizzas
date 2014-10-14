@@ -49,7 +49,7 @@ class UniqueProductViewSet(GenericViewSet):
 		(queryset, status) = self.get_filtered_set(request)
 		serializer = self.serializer_class(queryset, many=True)	
 
-		return Response(serializer.data, status=status)
+		return Response(self.inject_eta(request, serializer.data), status=status)
 
 
 	def get_filtered_set(self, request, pk=None):
@@ -97,6 +97,17 @@ class UniqueProductViewSet(GenericViewSet):
 
 		return (queryset, ret_status)
 
+	def get_eta(self, c_long, c_lat, p_long, p_lat):
+		#FIXME: move this code elsewhere, to somewhere more generic
+		#FIXME: currently fake number. fix when data gets better
+		return 20
+
+	def inject_eta(self, request, data):
+		for index in range(len(data)):
+			data[index]['eta'] = self.get_eta(0, 0, 0, 0) #FIXME: currently passing non values. Pass session when avail
+
+		return data
+
 
 	def retrieve(self, request, pk=None):
 		
@@ -104,7 +115,7 @@ class UniqueProductViewSet(GenericViewSet):
 			(queryset, status) = self.get_filtered_set(request, pk)
 
 			serializer = self.serializer_class(queryset, many=True)
-			return Response(serializer.data, status=status)
+			return Response(self.inject_eta(request, serializer.data), status=status)
 		
 		else:
 			return Response([], status=status.HTTP_204_NO_CONTENT)
