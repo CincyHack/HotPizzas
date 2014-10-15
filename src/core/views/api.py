@@ -12,6 +12,7 @@ from rest_framework.permissions import (
 from rest_framework.response import (
 	Response,
 )
+from ..include import get_coord_offsets
 from ..models import (
 	HotPizzasUser,
 	Product,
@@ -31,8 +32,26 @@ from ..permissions import (
 	UserPermission,
 )
 
+class ProductLocationMixin(object):
 
-class UniqueProductViewSet(GenericViewSet):
+	def get_location(self, request):
+		if "long" in request.GET and "lat" in request.GET:
+			try:
+				request.session["long"] = float(request.GET["long"])
+				request.session["lat"] = float(request.GET["lat"])
+				return {"lat": request.GET["lat"], "long": request.GET["long"]}
+			except:
+				return False
+		elif "long" in request.session and "lat" in request.session:
+			try:
+				return {"lat": float(request.session["lat"]), "long": float(request.session["long"])}
+			except:
+				return False
+		else:
+			return False
+
+
+class UniqueProductViewSet(ProductLocationMixin, GenericViewSet):
 	permission_classes = (
 		ProductPermission,
 	)
@@ -46,13 +65,20 @@ class UniqueProductViewSet(GenericViewSet):
 
 
 	def list(self, request):
-		(queryset, status) = self.get_filtered_set(request)
-		serializer = self.serializer_class(queryset, many=True)	
+		(queryset, ret_status) = self.get_filtered_set(request)
 
-		return Response(self.inject_eta(request, serializer.data), status=status)
+		if queryset:
+			serializer = self.serializer_class(queryset, many=True)	
+			return Response(self.inject_eta(request, serializer.data), status=ret_status)
+		else:
+			return Response([], status=ret_status)
 
 
 	def get_filtered_set(self, request, pk=None):
+		location = self.get_location(request)
+		if not location:
+			return (None, status.HTTP_400_BAD_REQUEST)
+
 		if pk:
 			#FIXME: handle malformed strings, excessive configurations, etc - may need to do model work
 			search_terms = pk.split("-")
@@ -65,14 +91,20 @@ class UniqueProductViewSet(GenericViewSet):
 
 			queryset = Product.objects.filter(product_type__name=product_type)
 			queryset = queryset.filter(purchased=False)
+			offsets = get_coord_offsets(location['long'], location['lat'], 10, 'mi')
+			queryset = queryset.filter(driver__longitude__lte=offsets[0], driver__longitude__gte=offsets[1])
+			queryset = queryset.filter(driver__latitude__lte=offsets[2], driver__latitude__gte=offsets[3])
 
 			for configuration in configurations[:filter_thresh]:
 				queryset = queryset.filter(configurations__description=configuration)
 
 		else:
 			#WARNING: this doesn't do what it looks like it does, but we try to do that below in a high complexity search
-			queryset = Product.objects.order_by('product_type', 'base_price', 'configurations').distinct('product_type', 'base_price', 'configurations')
-			queryset = queryset.filter(purchased=False)
+			queryset = Product.objects.filter(purchased=False)
+			offsets = get_coord_offsets(location['long'], location['lat'], 10, 'mi')
+			queryset = queryset.filter(driver__longitude__lte=offsets[0], driver__longitude__gte=offsets[1])
+			queryset = queryset.filter(driver__latitude__lte=offsets[2], driver__latitude__gte=offsets[3])
+			queryset = queryset.order_by('product_type', 'base_price', 'configurations').distinct('product_type', 'base_price', 'configurations')
 			filtered_queryset = list()
 			
 			#FIXME: this is not sustainable
@@ -112,13 +144,16 @@ class UniqueProductViewSet(GenericViewSet):
 	def retrieve(self, request, pk=None):
 		
 		if pk:
-			(queryset, status) = self.get_filtered_set(request, pk)
+			(queryset, ret_status) = self.get_filtered_set(request, pk)
 
-			serializer = self.serializer_class(queryset, many=True)
-			return Response(self.inject_eta(request, serializer.data), status=status)
+			if queryset:
+				serializer = self.serializer_class(queryset, many=True)
+				return Response(self.inject_eta(request, serializer.data), status=ret_status)
+			else:
+				return Response([], status=ret_status)
 		
 		else:
-			return Response([], status=status.HTTP_204_NO_CONTENT)
+			return Response([], status=status.HTTP_400_BAD_REQUEST)
 
 
 	def update(self, request, pk=None):
@@ -136,7 +171,7 @@ class UniqueProductViewSet(GenericViewSet):
 			return Response([])
 
 
-class ProductViewSet(ModelViewSet):
+class ProductViewSet(ProductLocationMixin, ModelViewSet):
 	permission_classes = (
 		ProductPermission,
 	)
@@ -151,11 +186,26 @@ class ProductViewSet(ModelViewSet):
 		elif user.is_authenticated() and user.is_driver:
 			return Product.objects.filter(delivered=False, driver=user)
 		else:
+			location = self.get_location(self.request)
+
 			if 'sessionid' in self.request.COOKIES:
 				sessionid = self.request.COOKIES.get('sessionid')
-				return Product.objects.filter(delivered=False, purchased=False) #FIXME: query by sessionid
+				queryset = Product.objects.filter(delivered=False, purchased=False) #FIXME: query by sessionid
+				offsets = get_coord_offsets(location['long'], location['lat'], 10, 'mi')
+				queryset = queryset.filter(driver__longitude__lte=offsets[0], driver__longitude__gte=offsets[1])
+				queryset = queryset.filter(driver__latitude__lte=offsets[2], driver__latitude__gte=offsets[3])
+				return queryset
+
 			else:
-				return Product.objects.filter(delivered=False, purchased=False) 
+				if location:
+					queryset = Product.objects.filter(delivered=False, purchased=False) 
+					offsets = get_coord_offsets(location['long'], location['lat'], 10, 'mi')
+					queryset = queryset.filter(driver__longitude__lte=offsets[0], driver__longitude__gte=offsets[1])
+					queryset = queryset.filter(driver__latitude__lte=offsets[2], driver__latitude__gte=offsets[3])
+					return queryset
+
+				else:
+					return Product.objects.none()
 
 	def buy(self, request, *args, **kwargs):
 		pass
