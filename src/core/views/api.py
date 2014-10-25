@@ -158,17 +158,29 @@ class UniqueProductViewSet(ProductLocationMixin, GenericViewSet):
 
 	def update(self, request, pk=None):
 		if pk:
-			(queryset, status) = self.get_filtered_set(request, pk)
+			(queryset, ret_status) = self.get_filtered_set(request, pk)
 			queryset = queryset.first()
-			serializer = self.serializer_class(queryset)
-
-			product_url = queryset.id
-			#FIXME: actually buy that shiz
-			return Response({"purchased_product": product_url})
+			product_id = queryset.id
+			product = Product.objects.get(pk=product_id)
+			cust_info = {}
+			cust_info['customer_longitude'] = request.DATA.get('long', None)
+			cust_info['customer_latitude'] = request.DATA.get('lat', None)
+			cust_info['customer_name'] = request.DATA.get('name', None)
+			cust_info['customer_sessionid'] = request.DATA.get('sessionid', None)
+			cust_info['purchased'] = True
+			cust_info['customer_phone_number'] = request.DATA.get('phone', None)
+			serializer = ProductSerializer(product, data=cust_info, partial=True)
+			if serializer.is_valid():
+				#FIXME: remove hardcoded url
+				product_url = "http://hotpizzas.co/Product/" + str(product_id) + "/"
+				serializer.save()
+				return Response({"purchased_product": product_url}, status=status.HTTP_200_OK)
+			else:
+				return Response({"error": "posted bad data"}, status=status.HTTP_400_BAD_REQUEST)
 
 		else:
 			#FIXME: send a buy order
-			return Response([])
+			return Response([], status=status.HTTP_202_ACCEPTED)
 
 
 class ProductViewSet(ProductLocationMixin, ModelViewSet):

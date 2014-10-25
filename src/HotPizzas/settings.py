@@ -71,6 +71,7 @@ ROOT_URLCONF = 'HotPizzas.urls'
 WSGI_APPLICATION = 'HotPizzas.wsgi.application'
 
 # CORS
+CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_ALLOW_ALL = True #FIXME
 CORS_ORIGIN_WHITELIST = (
         'pepperonio.com',

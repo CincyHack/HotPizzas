@@ -161,6 +161,14 @@ class ProductPermission(RESTPermissionMixin, DriverPermissionMixin, BasePermissi
 		else:
 			return False
 
+	def is_purchasing_session(self, request, obj):
+		if 'sessionid' in request.GET:
+			return obj.customer_sessionid == request.GET.get('sessionid', None)
+		elif 'sessionid' in request.COOKIES:
+			return obj.customer_sessionid == request.COOKIES.get('sessionid', None)
+		else:
+			return False
+
 
 	def is_delivered(self, request, obj):
 		if isinstance(obj, Product):
@@ -176,7 +184,10 @@ class ProductPermission(RESTPermissionMixin, DriverPermissionMixin, BasePermissi
 			if self.is_product_driver(request, obj):
 				return not self.is_delivered(request, obj)
 			else:
-				return not self.is_purchased(request, obj)
+				if request.user.is_authenticated() and request.user.is_superuser:
+					return True
+				else:
+					return not self.is_purchased(request, obj) or self.is_purchasing_session(request, obj)
 
 		elif self.is_update(request):
 			return False #FIXME: users should be able to update products to purchase, drivers should be able to fix pizza
