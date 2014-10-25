@@ -21,6 +21,11 @@ def get_user_gps(request):
 	return (request.DATA.get("long", None), request.DATA.get("lat", None))
 
 
+def is_valid_geo(coord):
+	#FIXME: actually validate coords
+	return True
+
+
 def est_time(gps1, gps2, old=None, count=0):
 	#FIXME: implement a real gps calculation method here
 	if not old:
