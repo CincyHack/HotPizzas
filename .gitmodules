@@ -4,3 +4,6 @@
 [submodule "client/backbone"]
 	path = client/backbone
 	url = https://github.com/jashkenas/backbone
+[submodule "client/mustache.js"]
+	path = client/mustache.js
+	url = https://github.com/janl/mustache.js
