@@ -1,0 +1,6 @@
+[submodule "client/foundation"]
+	path = client/foundation
+	url = https://github.com/zurb/foundation
+[submodule "client/backbone"]
+	path = client/backbone
+	url = https://github.com/jashkenas/backbone
