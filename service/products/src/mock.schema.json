@@ -1,0 +1,40 @@
+{
+	"$schema": "http://json-schema.org/draft-04/schema#",
+	"title": "Product List",
+	"type": "object",
+	"properties": {
+		"product_type": {
+			"description": "The type of product being returned",
+			"type": "string"
+		}
+		"products" {
+			"description": "The products available for order",
+			"type": "array",
+			"items": {
+				"title": "Product",
+				"type": "object",
+				"properties": {
+					"product_configs": {
+						"type": "array",
+						"items": {
+							"type": "string"
+						},
+						"uniqueItems": true
+					},
+					"estimated_time": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"product_configs",
+					"estimated_time"
+				]
+			},
+			"uniqueItems": true
+		}
+	},
+	"required": [
+		"product_type",
+		"products"
+	]
+}
