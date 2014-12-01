@@ -1,0 +1,26 @@
+{
+	"product_type": "Pizzas",
+	"products" [
+		{
+			"product_configs": [
+				"Pepperoni",
+				"Large"
+			],
+			"estimated_time": "10min"
+		},
+		{
+			"product_configs": [
+				"Sausage",
+				"Large"
+			],
+			"estimated_time": "5min"
+		},
+		{
+			"product_configs": [
+				"Cheese",
+				"Large"
+			]
+			"estimated_time": "10min"
+		}
+	]
+}
