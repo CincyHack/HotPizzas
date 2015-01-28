@@ -1,0 +1,12 @@
+[package]
+
+name = "service"
+version = "0.0.1"
+authors = ["David J Felix <felix.davidj@gmail.com>"]
+
+[dependencies]
+iron = "*"
+
+[[bin]]
+
+name = "service"
