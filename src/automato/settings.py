@@ -16,6 +16,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
 
+# FIXME: Use different key in prod
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '0(94^)wmz-8h9@%b*=9k6#*#h*uqk!u7$9bio@#d)cb#*p^34_'
 
@@ -36,6 +37,16 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'oauth2_provider',
+    'social.apps.django_app.default',
+    'corsheaders'
+)
+
+AUTHENTICATION_BACKENDS = (
+    'oauth2_provider.backends.OAuth2Backend',
+    'social.backends.google.GoogleOAuth2',
+    'social.backends.facebook.FacebookOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -46,12 +57,15 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 )
 
 ROOT_URLCONF = 'automato.urls'
 
 WSGI_APPLICATION = 'automato.wsgi.application'
 
+#FIXME: Change cors headers for prod
+CORS_ORIGIN_ALLOW_ALL = True
 
 # Database
 # https://docs.djangoproject.com/en/1.7/ref/settings/#databases
