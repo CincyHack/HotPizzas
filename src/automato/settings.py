@@ -20,6 +20,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '0(94^)wmz-8h9@%b*=9k6#*#h*uqk!u7$9bio@#d)cb#*p^34_'
 
+# FIXME: Add google key
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = ''
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = ''
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
