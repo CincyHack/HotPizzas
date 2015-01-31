@@ -13,7 +13,7 @@ import os
 from unipath import Path
 
 
-BASE_DIR = Path(__file__).ancestor(3)
+BASE_DIR = Path(__file__).ancestor(2)
 STATICFILES_DIRS = (
     BASE_DIR.child('static'),
 )
