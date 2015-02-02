@@ -51,7 +51,8 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'oauth2_provider',
     'social.apps.django_app.default',
-    'corsheaders'
+    'corsheaders',
+    'drivers',
 )
 
 AUTHENTICATION_BACKENDS = (
