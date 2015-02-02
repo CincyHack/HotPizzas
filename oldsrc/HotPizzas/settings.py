@@ -42,16 +42,16 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-	'corsheaders',
+    'corsheaders',
     'rest_framework',
     'core',
     'oauth2_provider',
-	'guardian',
+    'guardian',
 )
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
-	'corsheaders.middleware.CorsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -60,8 +60,8 @@ MIDDLEWARE_CLASSES = (
 )
 
 AUTHENTICATION_BACKENDS = (
-	'django.contrib.auth.backends.ModelBackend',
-	'guardian.backends.ObjectPermissionBackend',
+    'django.contrib.auth.backends.ModelBackend',
+    'guardian.backends.ObjectPermissionBackend',
 )
 
 ANONYMOUS_USER_ID = -1
@@ -74,7 +74,7 @@ WSGI_APPLICATION = 'HotPizzas.wsgi.application'
 CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_ALLOW_ALL = True #FIXME
 CORS_ORIGIN_WHITELIST = (
-        'pepperonio.com',
+    'pepperonio.com',
 )
 
 #Session
@@ -114,10 +114,10 @@ AUTH_USER_MODEL = 'core.HotPizzasUser'
 
 # Oauth2 settings
 OAUTH2_PROVIDER = {
-	'SCOPES' : {
-		'customer' : 'Customer Scope',
-		'driver' : 'Driver Scope',
-	},
+    'SCOPES' : {
+        'customer' : 'Customer Scope',
+        'driver' : 'Driver Scope',
+    },
 }
 
 
