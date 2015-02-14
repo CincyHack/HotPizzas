@@ -9,7 +9,7 @@ urlpatterns = patterns('',
 
     url(r'^admin/', include(admin.site.urls)),
     url(r'^oauth2/', include('oauth2_provider.urls', namespace='oauth2_provider')),
-    url(r'^login/', 'django.contrib.auth.views.login', {'template_name': 'login.html'}),
+    url(r'^login/$', 'django.contrib.auth.views.login', {'template_name': 'login.html'}),
     url(r'^$', TemplateView.as_view(template_name='index.html'), name='home'),
     url(r'', include('social.apps.django_app.urls', namespace='social')),
 )
